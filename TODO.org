@@ -1,0 +1,18 @@
+#+title: TODO
+#+options: toc:nil num:nil
+#+seq_todo: next(n) todo(t) waiting(w) someday(s) | done(d) cancelled(c) | maybe(m)
+#+archive: TODO-archive.org::
+
+* maybe Packer builds in CircleCI
+* todo Terraform
+** maybe Have the Consul agents get the Consul leader address from the AWS LB
+** maybe create the build tools container
+** maybe trigger TFE runs from GitlabCI
+** todo AWS Puppet infra
+*** todo add code to have the agents register with Consul and Vault
+    SCHEDULED: <2018-11-09 Fri>
+*** vSphere [0/2]
+**** todo get node a public IP
+**** todo provisioning code
+** todo Identify a good Connect demo
+   - Todd's e-commerce with the components spread out amongst the clouds and wired back together with Connect?

@@ -1,0 +1,3 @@
+- the various authors of [vault-aws](https://github.com/hashicorp-modules/vault-aws)
+- [Adam Cavaliere](https://github.com/AdamCavaliere/terraform-demos) for TF code and patterns
+- [Dave Arnold](https://github.com/djaboxx) for tooling and ideas around Terraform Enterprise token handling
