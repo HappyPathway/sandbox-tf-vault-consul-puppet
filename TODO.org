@@ -3,10 +3,9 @@
 #+seq_todo: next(n) todo(t) waiting(w) someday(s) | done(d) cancelled(c)
 #+archive: plan-archive.org::
 
-* todo Packer builds in Circle
+* someday Packer builds in Circle
 * todo Terraform
-** next create the build tools container
-   SCHEDULED: <2018-10-05 Fri>
-** next create the TFE Workspaces
-   SCHEDULED: <2018-10-05 Fri>
+** someday create the build tools container
 ** someday trigger TFE runs from GitlabCI
+** next build out Consul and Vault clusters in AWS
+   SCHEDULED: <2018-10-08 Mon>
