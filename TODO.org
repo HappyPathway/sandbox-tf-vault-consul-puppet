@@ -1,11 +1,14 @@
 #+title: TODO
 #+options: toc:nil num:nil
-#+seq_todo: next(n) todo(t) waiting(w) someday(s) | done(d) cancelled(c)
-#+archive: plan-archive.org::
+#+seq_todo: next(n) todo(t) waiting(w) someday(s) | done(d) cancelled(c) | maybe(m)
+#+archive: TODO-archive.org::
 
-* someday Packer builds in Circle
+* maybe Packer builds in Circlen
 * todo Terraform
-** someday create the build tools container
-** someday trigger TFE runs from GitlabCI
-** next build out Consul and Vault clusters in AWS
-   SCHEDULED: <2018-10-08 Mon>
+** maybe create the build tools container
+** maybe trigger TFE runs from GitlabCI
+** AWS Puppet infra
+*** master
+*** agent with Vault integration
+** Identify a good Connect demo
+   - Todd's e-commerce with the components spread out amongst the clouds and wired back together with Connect?
