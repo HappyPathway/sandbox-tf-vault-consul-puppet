@@ -7,8 +7,9 @@
 * todo Terraform
 ** maybe create the build tools container
 ** maybe trigger TFE runs from GitlabCI
-** AWS Puppet infra
-*** master
-*** agent with Vault integration
-** Identify a good Connect demo
+** todo AWS Puppet infra
+*** next master
+    SCHEDULED: <2018-10-09 Tue>
+*** todo agent with Vault integration
+** todo Identify a good Connect demo
    - Todd's e-commerce with the components spread out amongst the clouds and wired back together with Connect?
