@@ -30,3 +30,7 @@ module "vault" {
   vault_tags = "${var.tags}"
   network_tags = "${var.tags}"
 }
+
+output "README" {
+  value = "${module.vault.zREADME}"
+}
