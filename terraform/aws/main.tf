@@ -22,6 +22,8 @@ module "vault" {
   name         = "${var.vault_cluster_name}"
   vault_tags   = "${var.tags}"
   network_tags = "${var.tags}"
+  consul_public = false
+  vault_public = false
 }
 
 # propagate various outputs from the Vault module for convenience
