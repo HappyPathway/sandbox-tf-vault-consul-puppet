@@ -1,7 +1,3 @@
-terraform {
-  required_version = ">= 0.11.1"
-}
-
 variable "gcp_credentials" {
   description = "GCP credentials needed by google provider"
 }

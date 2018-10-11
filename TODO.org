@@ -3,13 +3,18 @@
 #+seq_todo: next(n) todo(t) waiting(w) someday(s) | done(d) cancelled(c) | maybe(m)
 #+archive: TODO-archive.org::
 
-* maybe Packer builds in Circlen
+* maybe Packer builds in CircleCI
 * todo Terraform
 ** maybe create the build tools container
 ** maybe trigger TFE runs from GitlabCI
 ** todo AWS Puppet infra
-*** next master
-    SCHEDULED: <2018-10-09 Tue>
-*** todo agent with Vault integration
+*** todo agent(s) with Vault integration
+    blocked on control repo
 ** todo Identify a good Connect demo
    - Todd's e-commerce with the components spread out amongst the clouds and wired back together with Connect?
+** next GCP node
+   SCHEDULED: <2018-10-11 Thu>
+** todo Azure node
+   SCHEDULED: <2018-10-11 Thu>
+** todo vSphere node
+   SCHEDULED: <2018-10-11 Thu>
