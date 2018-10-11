@@ -1,11 +1,11 @@
 variable "app_name" {
   description = "Name of Application"
-  default     = "defaultapp"
+  default     = "vault-puppet-demo"
 }
 
 variable "networkEnv" {
   description = "e.g. Dev, Stage, Prod"
-  default     = "dev"
+  default     = "demo"
 }
 
 variable "location" {
