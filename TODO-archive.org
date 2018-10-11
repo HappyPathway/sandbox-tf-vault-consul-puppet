@@ -1,0 +1,36 @@
+
+Archived entries from file /home/nrvale0/workspace/gitlab/nrvale0/sandbox-tf-vault-consul-puppet/TODO.org
+
+
+* done master
+  SCHEDULED: <2018-10-09 Tue>
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2018-10-11 Thu 10:48
+  :ARCHIVE_FILE: ~/workspace/gitlab/nrvale0/sandbox-tf-vault-consul-puppet/TODO.org
+  :ARCHIVE_OLPATH: Terraform/AWS Puppet infra
+  :ARCHIVE_CATEGORY: TODO
+  :ARCHIVE_TODO: done
+  :END:
+
+Archived entries from file /home/nrvale0/workspace/gitlab/nrvale0/sandbox-tf-vault-consul-puppet/TODO.org
+
+
+* done GCP node
+  SCHEDULED: <2018-10-11 Thu>
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2018-10-11 Thu 11:45
+  :ARCHIVE_FILE: ~/workspace/gitlab/nrvale0/sandbox-tf-vault-consul-puppet/TODO.org
+  :ARCHIVE_OLPATH: Terraform
+  :ARCHIVE_CATEGORY: TODO
+  :ARCHIVE_TODO: done
+  :END:
+
+* done Azure node
+  SCHEDULED: <2018-10-11 Thu>
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2018-10-11 Thu 11:52
+  :ARCHIVE_FILE: ~/workspace/gitlab/nrvale0/sandbox-tf-vault-consul-puppet/TODO.org
+  :ARCHIVE_OLPATH: Terraform
+  :ARCHIVE_CATEGORY: TODO
+  :ARCHIVE_TODO: done
+  :END:

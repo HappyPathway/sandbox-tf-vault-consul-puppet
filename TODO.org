@@ -12,9 +12,6 @@
     blocked on control repo
 ** todo Identify a good Connect demo
    - Todd's e-commerce with the components spread out amongst the clouds and wired back together with Connect?
-** next GCP node
+** next vSphere node
    SCHEDULED: <2018-10-11 Thu>
-** todo Azure node
-   SCHEDULED: <2018-10-11 Thu>
-** todo vSphere node
-   SCHEDULED: <2018-10-11 Thu>
+** todo default all variables except cloud credentials
