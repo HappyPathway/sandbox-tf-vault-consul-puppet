@@ -15,5 +15,5 @@ variable "location" {
 
 variable "instance_count" {
   description = "Number of servers"
-  default     = "2"
+  default     = "1"
 }
