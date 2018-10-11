@@ -1,15 +1,23 @@
-variable "app_name" {
-  description = "Application Name"
+variable "disk_size" {
+  default = 40
 }
 
-variable "app_disk1_size" {
-  description = "Size of the first disk"
+variable "vm_name" {
+  default = "vault-puppet-client"
 }
 
-variable "app_vmcount" {
-  description = "Number of VMs to Deploy"
+variable "cpu_count" {
+  default = 1
 }
 
-variable "app_environment_tag" {
-  description = "Tag to set on the VM"
+variable "memory" {
+  default = 2048
+}
+
+variable "vm_count" {
+  default = 1
+}
+
+variable "tag_name" {
+  default = "Environment"
 }
