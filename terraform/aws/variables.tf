@@ -27,3 +27,11 @@ variable "vault_cluster_name" {
 variable "pe_download_uri" {
   default = "https://pm.puppet.com/cgi-bin/download.cgi?arch=amd64&dist=ubuntu&rel=18.04&ver=latest"
 }
+
+variable "consul_public" {
+  default = false
+}
+
+variable "vault_public" {
+  default = false
+}

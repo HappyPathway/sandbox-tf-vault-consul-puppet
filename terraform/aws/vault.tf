@@ -3,8 +3,8 @@ module "vault" {
   name          = "${var.vault_cluster_name}"
   vault_tags    = "${var.instance_tags}"
   network_tags  = "${var.network_tags}"
-  consul_public = false
-  vault_public  = false
+  consul_public = "${var.consul_public}"
+  vault_public  = "${var.vault_public}"
 }
 
 # propagate various outputs from the Vault module for convenience
