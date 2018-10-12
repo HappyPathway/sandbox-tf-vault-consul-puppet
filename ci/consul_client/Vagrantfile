@@ -1,0 +1,23 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/bionic64"
+
+  hostname = "ci-consul-client-%s" % %x{hostid}.chomp
+
+  config.vm.provider "virtualbox" do |v|
+    v.memory = "4096"
+    v.cpus = "2"
+    v.name = "#{hostname}"
+
+  end
+
+  bridgeif = ENV['CI_BRIDGE_IF']
+  config.vm.network "public_network", bridge: [
+    "#{bridgeif}"
+  ]
+
+  config.vm.hostname = "#{hostname}"
+
+  config.vm.provision "shell", \
+                      env: {"CONSUL_SERVER" => ENV['CI_CONSUL_SERVER'], "PUPPET_ENTERPRISE_MASTER" => ENV['CI_PUPPET_ENTERPRISE_MASTER']}, \
+                      path: "../../terraform/templates/consul_client_bootstrap.sh.tpl"
+end
