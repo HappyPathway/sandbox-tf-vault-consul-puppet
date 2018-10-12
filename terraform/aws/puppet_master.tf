@@ -23,7 +23,7 @@ data "template_cloudinit_config" "pe_master_cloudinit" {
   part {
     filename     = "bootstrap.sh"
     content_type = "text/x-shellscript"
-    content      = "${file("${path.module}/templates/pe_master_bootstrap.sh.tpl")}"
+    content      = "${file("${path.module}/../templates/pe_master_bootstrap.sh.tpl")}"
   }
 }
 
@@ -33,6 +33,13 @@ resource "aws_security_group" "puppet-master" {
   vpc_id = "${module.vault.vpc_id}"
 
   ingress {
+    from_port = 0
+    to_port = 0
+    protocol = -1
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
     from_port = 0
     to_port = 0
     protocol = -1

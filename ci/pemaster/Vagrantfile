@@ -1,0 +1,28 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/bionic64"
+
+  config.vm.provider "virtualbox" do |v|
+    v.memory = "4096"
+    v.cpus = "2"
+    v.name = "pemaster"
+  end
+
+  config.vm.hostname = "pemaster.private"
+
+  # for asset caching
+  config.vm.provision "shell", run: "always" do |s|
+    s.inline = <<PEASSET
+      (test -e /vagrant/pe.tar.gz && mv /vagrant/pe.tar.gz /tmp/) || true
+PEASSET
+  end
+
+  # fake Facter for the necessary AWS meta data service entries
+  config.vm.provision "shell", run: "always" do |s|
+    s.inline = <<FACTER
+      mkdir -p /etc/facter/facts.d
+      cp /vagrant/ec2_metadata.json /etc/facter/facts.d/
+FACTER
+  end
+
+  config.vm.provision "shell", path: "../../terraform/templates/pe_master_bootstrap.sh.tpl"
+end

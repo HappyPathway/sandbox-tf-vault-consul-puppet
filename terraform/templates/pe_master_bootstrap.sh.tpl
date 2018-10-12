@@ -11,12 +11,20 @@ set -eux
 wget -q -c -O /tmp/pe.tar.gz "${PE_DOWNLOAD_URI}"
 mkdir -p /tmp/pe
 tar xvf /tmp/pe.tar.gz -C /tmp/pe --strip-components 1
-apt-get update
-apt-get install -y ruby-hocon
-hocon -f /tmp/pe/conf.d/pe.conf set console_admin_password admin
+
+command -v hocon && command -v facter
+if [ "0" -ne "$?" ]; then
+    apt-get update
+    apt-get install -y ruby-hocon facter
+fi
+
+public_hostname="$(facter ec2_metadata.public-hostname)"
+hocon -f /tmp/pe/conf.d/pe.conf set console_admin_password vault-puppet-demo
+hocon -f /tmp/pe/conf.d/pe.conf set pe_install\"::\"puppet_master_dnsaltnames "[ \"${public_hostname}\" ]"
 /tmp/pe/puppet-enterprise-installer -c /tmp/pe/conf.d/pe.conf -y
 
 sleep 10
+
 while true; do
     set +e
     puppet agent -t
