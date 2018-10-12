@@ -27,6 +27,23 @@ data "template_cloudinit_config" "pe_master_cloudinit" {
   }
 }
 
+resource "aws_security_group" "puppet-master" {
+  name = "${var.vault_cluster_name}-puppet-master"
+  description = "allow all in-bound to the Puppet master"
+  vpc_id = "${module.vault.vpc_id}"
+
+  ingress {
+    from_port = 0
+    to_port = 0
+    protocol = -1
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "${var.vault_cluster_name}-puppet-master"
+  }
+}
+
 resource "aws_instance" "puppet-master" {
   ami           = "${data.aws_ami.ubuntu.id}"
   instance_type = "m1.large"
@@ -34,4 +51,6 @@ resource "aws_instance" "puppet-master" {
   subnet_id     = "${element(module.vault.subnet_public_ids, 0)}"
   user_data     = "${data.template_cloudinit_config.pe_master_cloudinit.rendered}"
   key_name      = "${module.vault.ssh_key_name}"
+  associate_public_ip_address = true
+  vpc_security_group_ids = [ "${aws_security_group.puppet-master.id}" ]
 }
