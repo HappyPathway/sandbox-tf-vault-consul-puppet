@@ -35,3 +35,5 @@ variable "consul_public" {
 variable "vault_public" {
   default = false
 }
+
+variable "papertrail_token" {}

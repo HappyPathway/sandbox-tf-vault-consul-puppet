@@ -76,11 +76,20 @@ function puppet_agent_install() {
 }
 
 
+function papertrail_install() {
+    wget -qO - --header="X-Papertrail-Token: ${PAPER_TRAIL_TOKEN}" \
+	 https://papertrailapp.com/destinations/10987402/setup.sh | sudo bash
+}
+
+
 function main() {
     hello
     check_deps
 
-    set -eux
+    set -eu
+    papertrail_install
+
+    set -x
     consul_client_install
     consul_template_install
     puppet_agent_install

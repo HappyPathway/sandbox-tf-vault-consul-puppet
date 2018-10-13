@@ -24,5 +24,5 @@ PEASSET
 FACTER
   end
 
-  config.vm.provision "shell", path: "../../terraform/templates/pe_master_bootstrap.sh.tpl"
+  config.vm.provision "shell", path: "/bin/bash -c ../../terraform/templates/pemaster_bootstrap.sh.tpl"
 end
