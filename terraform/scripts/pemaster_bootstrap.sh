@@ -11,6 +11,7 @@ l    msg='Hello from the PE Master bootstrap script!'
 
 
 function check_deps() {
+    echo "Checking for required software..."
     command -v hocon && command -v facter
     if [ "0" -ne "$?" ]; then
 	apt-get update
@@ -20,6 +21,7 @@ function check_deps() {
 
 
 function pe_install() {
+    echo "Downloading and install PE master..."
     wget -q -c -O /tmp/pe.tar.gz "${PE_DOWNLOAD_URI}"
     mkdir -p /tmp/pe
     tar xvf /tmp/pe.tar.gz -C /tmp/pe --strip-components 1
@@ -50,7 +52,7 @@ function pe_install() {
 
 
 function papertrail_install() {
-    echo 'Installing Papertrail agent...'
+    echo "Installing Papertrail agent..."
     wget -O /tmp/papertrail_setup.sh --header="X-Papertrail-Token: ${PAPERTRAIL_TOKEN}" https://papertrailapp.com/destinations/10987402/setup.sh
     chmod +x /tmp/papertrail_setup.sh
     /tmp/papertrail_setup.sh -q
@@ -59,18 +61,19 @@ function papertrail_install() {
 
 
 function goodbye() {
-    msg='PE Master bootstrap script finished.'
+    msg="PE Master bootstrap script finished."
     logger $msg
     echo $msg
 }
 
 
 main() {
-    hello
-    check_deps
+    set -eu
+    papertrail_install
 
     set -eux
-    papertrail_install
+    hello
+    check_deps
 
     set -x
     pe_install

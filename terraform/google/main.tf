@@ -31,16 +31,29 @@ variable "image" {
   default = "debian-cloud/debian-9"
 }
 
+variable "papertrail_token" {}
+
 provider "google" {
   credentials = "${var.gcp_credentials}"
   project     = "${var.gcp_project}"
   region      = "${var.gcp_region}"
 }
 
+resource "template_file" "google_startup_script" {
+  template = "${file("${path.module}/../templates/consul_client_bootstrap.sh.tpl")}"
+
+  vars {
+    papertrail_token = "${var.papertrail_token}"
+    logic = "${file("${path.module}/../scripts/consul_client_bootstrap.sh")}"
+  }
+}
+
 resource "google_compute_instance" "demo" {
   name         = "${var.instance_name}"
   machine_type = "${var.machine_type}"
   zone         = "${var.gcp_zone}"
+
+  metadata_startup_script = "${template_file.google_startup_script.rendered}"
 
   boot_disk {
     initialize_params {

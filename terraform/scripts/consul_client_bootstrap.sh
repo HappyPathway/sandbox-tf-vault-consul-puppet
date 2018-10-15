@@ -11,7 +11,7 @@ PAPERTRAIL_TOKEN="${papertrail_token}"
 function hello() {
     msg='Hello from the Consul client bootstrap script!'
     logger $mg
-    echo $mg
+    echo $msg
 
     set -u
 
@@ -21,6 +21,7 @@ function hello() {
 
 
 function check_deps() {
+    echo "Checking for required software..."
     command -v zip && command -v daemonize && command -v httpie && command -v curl
     if [ "0" -ne "$?" ]; then
 	export DEBIAN_FRONTEND=noninteractive
@@ -32,6 +33,7 @@ function check_deps() {
 
 
 function consul_client_install() {
+   echo "Downloading and installing Consul agent..."
    wget -q -c -O /tmp/consul.zip "${CONSUL_DOWNLOAD_URI}"
    unzip -o /tmp/consul.zip -d /usr/local/bin/
 
@@ -56,6 +58,7 @@ CONSULCONFIG
 
 
 function consul_template_install() {
+    echo "Downloading and installing consul-template..."
     wget -q -c -O /tmp/consul-template.zip "${CONSUL_TEMPLATE_DOWNLOAD_URI}"
     unzip -o /tmp/consul-template.zip -d /usr/local/bin/
 
@@ -72,19 +75,29 @@ CONSUL_TEMPLATE_CONF
 
 
 function puppet_agent_install() {
+    echo "Downloading and installing Puppet Agent..."
     curl -k "https://${PUPPET_ENTERPRISE_MASTER}:8140/packages/current/install.bash" | bash
+
+    sleep 10
+    while true; do
+	set +e
+	puppet agent -t
+	if [ "$?" -eq "0" ]; then
+	    set -e ; break
+	fi
+    done
 }
 
 
 function goodbye() {
-    msg='PE Master bootstrap script finished.'
+    msg="Consul Agent bootstrap finished."
     logger $msg
     echo $msg
 }
 
 
 function papertrail_install() {
-    echo 'Installing Papertrail agent...'
+    echo "Installing Papertrail agent..."
     wget -O /tmp/papertrail_setup.sh --header="X-Papertrail-Token: ${PAPERTRAIL_TOKEN}" https://papertrailapp.com/destinations/10987402/setup.sh
     chmod +x /tmp/papertrail_setup.sh
     /tmp/papertrail_setup.sh -q
@@ -93,13 +106,13 @@ function papertrail_install() {
 
 
 function main() {
+    set -eu
+    papertrail_install
+
+    set -eux
     hello
     check_deps
 
-    set -eux
-    papertrail_install
-
-    set -x
     consul_client_install
     consul_template_install
     puppet_agent_install
