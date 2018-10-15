@@ -27,6 +27,15 @@ data "vsphere_network" "network" {
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
+data "template_file" "vsphere_userdata" {
+  template = "${file("${path.module}/../templates/consul_client_bootstrap.sh.tpl")}"
+
+  vars {
+    papertrail_token = "${var.papertrail_token}"
+    logic = "${file("${path.module}/../scripts/consul_client_bootstrap.sh")}"
+  }
+}
+
 resource "vsphere_virtual_machine" "vm" {
   name                        = "${var.vm_name}_${count.index + 1}"
   resource_pool_id            = "${data.vsphere_compute_cluster.cluster.resource_pool_id}"
@@ -48,6 +57,10 @@ resource "vsphere_virtual_machine" "vm" {
     label            = "disk0"
     size             = "${var.disk_size}"
     thin_provisioned = true
+  }
+
+  extra_config {
+    guestinfo.cloudinit.userdata = "${data.template_file.vsphere_userdata.rendered}"
   }
 
   clone {

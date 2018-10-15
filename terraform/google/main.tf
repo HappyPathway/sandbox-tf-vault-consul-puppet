@@ -61,6 +61,7 @@ resource "google_compute_instance" "demo" {
     }
   }
 
+
   network_interface {
     network = "default"
 

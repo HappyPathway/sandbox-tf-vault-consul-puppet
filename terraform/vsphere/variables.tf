@@ -21,3 +21,5 @@ variable "vm_count" {
 variable "tag_name" {
   default = "Environment"
 }
+
+variable "papertrail_token" {}
