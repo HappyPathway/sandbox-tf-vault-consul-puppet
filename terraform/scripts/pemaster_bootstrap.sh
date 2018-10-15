@@ -1,9 +1,10 @@
-: ${PAPERTRAIL_TOKEN=$${papertrail_token}}
+PAPERTRAIL_TOKEN="${papertrail_token}"
+
 : ${PE_DOWNLOAD_URI='https://pm.puppet.com/cgi-bin/download.cgi?arch=amd64&dist=ubuntu&rel=18.04&ver=latest'}
 
 
 function hello() {
-    msg='Hello from the PE Master bootstrap script!'
+l    msg='Hello from the PE Master bootstrap script!'
     logger $msg
     echo $msg
 }
@@ -29,9 +30,9 @@ function pe_install() {
 
     # There are a number of settings which have to be adjust to ensure proper operation though
     # an AWS loadbalancer.
-    hocon -f /tmp/pe/conf.d/pe.conf set pe_install\"::\"master_pool_address "https\"://\"${public_hostname}\":\"8140"
+    hocon -f /tmp/pe/conf.d/pe.conf set pe_install\"::\"master_pool_address "${public_hostname}"
     hocon -f /tmp/pe/conf.d/pe.conf set pe_install\"::\"puppet_master_dnsaltnames "[ \"${public_hostname}\" ]"
-    hocon -f /tmp/pe/conf.d/pe.conf set pe_repo\"::\"master "https\"://\"${public_hostname}\":\"8140"
+    hocon -f /tmp/pe/conf.d/pe.conf set pe_repo\"::\"master "${public_hostname}"
     hocon -f /tmp/pe/conf.d/pe.conf set puppet_enterprise\"::\"profile\"::\"agent\"::\"master_uris "[ \"https://${public_hostname}:8140\" ]"
     hocon -f /tmp/pe/conf.d/pe.conf set puppet_enterprise\"::\"profile\"::\"agent\"::\"pcp_broker_list "[ \"https://${public_hostname}:8140\" ]"
 
@@ -50,7 +51,7 @@ function pe_install() {
 
 function papertrail_install() {
     echo 'Installing Papertrail agent...'
-    wget -O /tmp/papertrail_setup.sh --header="X-Papertrail-Token: ${papertrail_token}" https://papertrailapp.com/destinations/10987402/setup.sh
+    wget -O /tmp/papertrail_setup.sh --header="X-Papertrail-Token: ${PAPERTRAIL_TOKEN}" https://papertrailapp.com/destinations/10987402/setup.sh
     chmod +x /tmp/papertrail_setup.sh
     /tmp/papertrail_setup.sh -q
     rm /tmp/papertrail_setup.sh
@@ -58,7 +59,7 @@ function papertrail_install() {
 
 
 function goodbye() {
-    msg = 'PE Master bootstrap script finished.'
+    msg='PE Master bootstrap script finished.'
     logger $msg
     echo $msg
 }

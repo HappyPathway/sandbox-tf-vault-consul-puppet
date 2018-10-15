@@ -18,6 +18,10 @@ Vagrant.configure("2") do |config|
   config.vm.hostname = "#{hostname}"
 
   config.vm.provision "shell", \
-                      env: {"CONSUL_SERVER" => ENV['CI_CONSUL_SERVER'], "PUPPET_ENTERPRISE_MASTER" => ENV['CI_PUPPET_ENTERPRISE_MASTER']}, \
-                      path: "../../terraform/templates/consul_client_bootstrap.sh.tpl"
+                      env: {
+                        "CONSUL_SERVER" => ENV['CI_CONSUL_SERVER'],
+                        "PUPPET_ENTERPRISE_MASTER" => ENV['CI_PUPPET_ENTERPRISE_MASTER'],
+                        "papertrail_token" => ENV['CI_PAPERTRAIL_TOKEN']
+                      }, \
+                      path: "../../terraform/scripts/consul_client_bootstrap.sh"
 end
