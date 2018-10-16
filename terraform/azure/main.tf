@@ -5,6 +5,15 @@ resource "azurerm_resource_group" "resource_gp" {
   location = "${var.location}"
 }
 
+data "template_file" "azure_custom_data" {
+  template = "${file("${path.module}/../templates/consul_client_bootstrap.sh.tpl")}"
+
+  vars {
+    papertrail_token = "${var.papertrail_token}"
+    logic = "${file("${path.module}/../scripts/consul_client_bootstrap.sh")}"
+  }
+}
+
 resource "azurerm_virtual_machine" "app_vm" {
   name                          = "${var.app_name}-vms-${count.index + 1}"
   location                      = "${azurerm_resource_group.resource_gp.location}"
@@ -34,6 +43,7 @@ resource "azurerm_virtual_machine" "app_vm" {
     computer_name  = "${var.app_name}-${count.index + 1}"
     admin_username = "testadmin"
     admin_password = "Password1234!"
+    custom_data = "$${data.template_file.azure_custom_data.rendered}"
   }
 
   os_profile_linux_config {

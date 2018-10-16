@@ -8,8 +8,13 @@
 ** maybe create the build tools container
 ** maybe trigger TFE runs from GitlabCI
 ** todo AWS Puppet infra
-*** next Add SG to allow Internet to talk to the Puppet master
-    SCHEDULED: <2018-10-12 Fri>
+*** todo add Papertrail to All The Things
+    - [ ] google
+    - [ ] azure
+    - [ ] vsphere
+    - [ ] AWS puppet master
+    - [ ] AWS consul
+    - [ ] AWZ Vault
 *** todo consul_client_bootstrap script registers with the Puppet master
     SCHEDULED: <2018-10-12 Fri>
 *** todo agent(s) with Vault integration

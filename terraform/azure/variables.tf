@@ -17,3 +17,5 @@ variable "instance_count" {
   description = "Number of servers"
   default     = "1"
 }
+
+variable "papertrail_token" {}

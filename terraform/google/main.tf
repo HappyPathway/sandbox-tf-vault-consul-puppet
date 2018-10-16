@@ -39,7 +39,7 @@ provider "google" {
   region      = "${var.gcp_region}"
 }
 
-resource "template_file" "google_startup_script" {
+data "template_file" "google_startup_script" {
   template = "${file("${path.module}/../templates/consul_client_bootstrap.sh.tpl")}"
 
   vars {
@@ -53,7 +53,7 @@ resource "google_compute_instance" "demo" {
   machine_type = "${var.machine_type}"
   zone         = "${var.gcp_zone}"
 
-  metadata_startup_script = "${template_file.google_startup_script.rendered}"
+  metadata_startup_script = "${data.template_file.google_startup_script.rendered}"
 
   boot_disk {
     initialize_params {
