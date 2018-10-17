@@ -5,12 +5,21 @@ resource "azurerm_resource_group" "resource_gp" {
   location = "${var.location}"
 }
 
+resource "azurerm_storage_account" "app_vm_boot_diagnostics" {
+  name                     = "vaultpuppetappbootdiags${count.index + 1}"
+  count                    = "${var.instance_count}"
+  resource_group_name      = "${azurerm_resource_group.resource_gp.name}"
+  location                 = "${var.location}"
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+}
+
 data "template_file" "azure_custom_data" {
   template = "${file("${path.module}/../templates/consul_client_bootstrap.sh.tpl")}"
 
   vars {
     papertrail_token = "${var.papertrail_token}"
-    logic = "${file("${path.module}/../scripts/consul_client_bootstrap.sh")}"
+    logic            = "${file("${path.module}/../scripts/consul_client_bootstrap.sh")}"
   }
 }
 
@@ -43,7 +52,7 @@ resource "azurerm_virtual_machine" "app_vm" {
     computer_name  = "${var.app_name}-${count.index + 1}"
     admin_username = "testadmin"
     admin_password = "Password1234!"
-    custom_data = "$${data.template_file.azure_custom_data.rendered}"
+    custom_data    = "$${data.template_file.azure_custom_data.rendered}"
   }
 
   os_profile_linux_config {
@@ -52,5 +61,10 @@ resource "azurerm_virtual_machine" "app_vm" {
 
   tags {
     environment = "staging"
+  }
+
+  boot_diagnostics {
+    enabled     = true
+    storage_uri = "${azurerm_storage_account.app_vm_boot_diagnostics.primary_blob_endpoint}"
   }
 }
