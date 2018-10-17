@@ -10,7 +10,7 @@ PAPERTRAIL_TOKEN="${papertrail_token}"
 
 function hello() {
     msg='Hello from the Consul client bootstrap script!'
-    logger $mg
+    logger $msg
     echo $msg
 
     set -u
