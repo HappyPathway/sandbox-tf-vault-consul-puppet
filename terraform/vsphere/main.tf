@@ -28,7 +28,8 @@ data "vsphere_network" "network" {
 }
 
 data "template_file" "vsphere_userdata" {
-  template = "${file("${path.module}/../templates/consul_client_bootstrap.sh.tpl")}"
+  
+  template = "${base64gzip(file("${path.module}/../templates/consul_client_bootstrap.sh.tpl"))}"
 
   vars {
     papertrail_token = "${var.papertrail_token}"
@@ -60,7 +61,8 @@ resource "vsphere_virtual_machine" "vm" {
   }
 
   extra_config {
-    guestinfo.cloudinit.userdata = "${data.template_file.vsphere_userdata.rendered}"
+    "guestinfo.userdata" = "${data.template_file.vsphere_userdata.rendered}"
+    "guestinfo.userdata.encoding" = "gzip+base64"
   }
 
   clone {
@@ -73,7 +75,7 @@ resource "vsphere_virtual_machine" "vm" {
       dns_server_list = ["8.8.8.8"]
 
       linux_options {
-        host_name = "${var.vm_name}"
+        host_name = "azure-${var.vm_name}"
         domain    = "vsphere.local"
       }
     }
