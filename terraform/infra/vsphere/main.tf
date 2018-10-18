@@ -28,7 +28,6 @@ data "vsphere_network" "network" {
 }
 
 data "template_file" "vsphere_userdata" {
-  
   template = "${base64gzip(file("${path.module}/../templates/consul_client_bootstrap.sh.tpl"))}"
 
   vars {

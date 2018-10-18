@@ -5,15 +5,16 @@
 
 * maybe Packer builds in CircleCI
 * todo Terraform
+** next write TF to do the TFE env setup
+   SCHEDULED: <2018-10-18 Thu>
 ** maybe create the build tools container
 ** maybe trigger TFE runs from GitlabCI
 ** todo AWS Puppet infra
 *** maybe add TF to pass cloudinit to Vault and Consul
-*** todo add Papertrail to All The Things
-    - [X] google
-    - [X] azure
-    - [ ] vsphere
-    - [X] AWS puppet master
+*** vSphere [0/3]
+**** todo get node a public IP
+**** todo papertrail for this node
+**** todo Puppet Agent for this node
 *** todo consul_client_bootstrap script registers with the Puppet master
     SCHEDULED: <2018-10-12 Fri>
 *** todo agent(s) with Vault integration
