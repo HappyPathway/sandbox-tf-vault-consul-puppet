@@ -11,7 +11,7 @@
 *** maybe add TF to pass cloudinit to Vault and Consul
 *** todo add Papertrail to All The Things
     - [X] google
-    - [ ] azure
+    - [X] azure
     - [ ] vsphere
     - [X] AWS puppet master
 *** todo consul_client_bootstrap script registers with the Puppet master
