@@ -42,9 +42,9 @@ resource "azurerm_network_interface" "netint" {
     public_ip_address_id          = "${azurerm_public_ip.app_vm_public_ip.id}"
   }
 
-  tags {
-    environment = "Vault Puppet demo"
-  }
+  # tags {
+  #   environment = "Vault Puppet demo"
+  # }
 }
 
 
@@ -61,14 +61,14 @@ resource "azurerm_storage_account" "app_vm_boot_diagnostics" {
   }
 }
 
-data "template_file" "azure_custom_data" {
-  template = "${file("${path.module}/../templates/consul_client_bootstrap.sh.tpl")}"
+# data "template_file" "azure_custom_data" {
+#   template = "${file("${path.module}/../templates/consul_client_bootstrap.sh.tpl")}"
 
-  vars {
-    papertrail_token = "${var.papertrail_token}"
-    logic            = "${file("${path.module}/../scripts/consul_client_bootstrap.sh")}"
-  }
-}
+#   vars {
+#     papertrail_token = "${var.papertrail_token}"
+#     logic            = "${file("${path.module}/../scripts/consul_client_bootstrap.sh")}"
+#   }
+# }
 
 resource "azurerm_virtual_machine" "app_vm" {
   name                          = "${var.app_name}-vms-${count.index + 1}"
@@ -98,23 +98,19 @@ resource "azurerm_virtual_machine" "app_vm" {
     computer_name  = "azure-${var.app_name}-${count.index + 1}"
     admin_username = "ubuntu"
     admin_password = "vault-puppet-demo-1234!"
-    custom_data    = "${data.template_file.azure_custom_data.rendered}"
+#    custom_data    = "${data.template_file.azure_custom_data.rendered}"
   }
 
   os_profile_linux_config {
     disable_password_authentication = false
   }
 
-  tags {
-    environment = "staging"
-  }
+  # tags {
+  #   environment = "staging"
+  # }
 
   boot_diagnostics {
     enabled     = true
     storage_uri = "${azurerm_storage_account.app_vm_boot_diagnostics.primary_blob_endpoint}"
-  }
-
-  tags {
-    enviroment = "Vault Puppet demo"
   }
 }

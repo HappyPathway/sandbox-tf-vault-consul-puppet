@@ -11,7 +11,6 @@ variable "image" { default = "debian-cloud/debian-9" }
 variable "papertrail_token" {}
 variable "prefix" {}
 variable "tags" {
-  type = "map"
-
-  default = {}
+  type = "list"
+  default = []
 }

@@ -6,7 +6,7 @@ module "infra_google" {
 
   instance_name = "gcp-${var.infra_prefix}"
   prefix = "${var.infra_prefix}"
-  tags = "${var.tags["project"]}"
+  tags = "${var.infra_tags["project"]}"
 
   papertrail_token = "${var.papertrail_token}"
 }
