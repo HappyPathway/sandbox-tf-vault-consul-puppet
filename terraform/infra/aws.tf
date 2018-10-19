@@ -1,5 +1,6 @@
 module "infra_aws" {
   source = "./modules/infra_aws"
+
   prefix = "${var.infra_prefix}"
   tags = "${var.infra_tags}"
 
