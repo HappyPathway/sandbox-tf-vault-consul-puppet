@@ -1,16 +1,14 @@
 #+title: sandbox-tf-vault-consul-puppet
 #+options: toc:nil num:nil
 
-* sandbox-tf-vault-consul-puppet
-
-** Summary
+* Summary
    A multi-cloud environment demonstrating multiple components in the Hashistack and Puppet as a consumer of Vault Secrets.
 
-** Contact
+* Contact
    - Nathan Valentine - nathan@hashicorp.com | nrvale0protonmail.com
 
-** Repo/Issue/Support
+* Repo/Issue/Support
    - [[https://gitlab.com/nrvale0/sandbox-tf-vault-consul-puppet]]
 
-** License
+* License
    - [[https://www.mozilla.org/en-US/MPL/2.0/][Mozilla Public License v 2.0]]
