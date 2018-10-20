@@ -5,8 +5,12 @@
 
 * maybe Packer builds in CircleCI
 * todo Terraform
-** next write TF to do the TFE env setup
-   SCHEDULED: <2018-10-18 Thu>
+** todo re-add the cloud-init scripts to the VMs
+   DEADLINE: <2018-10-21 Sun>
+   - [ ] Puppet @ AWS
+   - [ ] GCP
+   - [ ] Azure
+   - [ ] vSphere
 ** maybe create the build tools container
 ** maybe trigger TFE runs from GitlabCI
 ** todo AWS Puppet infra
