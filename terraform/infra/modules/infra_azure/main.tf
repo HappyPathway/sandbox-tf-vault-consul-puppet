@@ -98,7 +98,7 @@ resource "azurerm_virtual_machine" "app_vm" {
     computer_name  = "azure-${var.app_name}"
     admin_username = "ubuntu"
     admin_password = "vault-puppet-demo-1234!"
-#    custom_data    = "${data.template_file.azure_custom_data.rendered}"
+    custom_data    = "${data.template_file.azure_custom_data.rendered}"
   }
 
   os_profile_linux_config {
