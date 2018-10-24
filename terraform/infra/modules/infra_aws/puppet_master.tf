@@ -72,7 +72,7 @@ resource "aws_instance" "puppet-master" {
   associate_public_ip_address = true
   vpc_security_group_ids      = ["${aws_security_group.puppet-master.id}"]
 
-  tags {
-    Name = "${var.prefix}-vault-puppet"
-  }
+  # tags {
+  #   Name = "${var.prefix}-vault-puppet"
+  # }
 }
