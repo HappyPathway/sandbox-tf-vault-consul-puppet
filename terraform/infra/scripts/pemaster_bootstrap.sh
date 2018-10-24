@@ -4,7 +4,7 @@ PAPERTRAIL_TOKEN="${papertrail_token}"
 
 
 function hello() {
-l    msg='Hello from the PE Master bootstrap script!'
+    msg='Hello from the PE Master bootstrap script!'
     logger $msg
     echo $msg
 }
