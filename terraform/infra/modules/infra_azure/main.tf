@@ -36,7 +36,7 @@ resource "azurerm_network_interface" "netint" {
   resource_group_name = "${azurerm_resource_group.resource_gp.name}"
 
   ip_configuration {
-    name                          = "ipconfig-${count.index + 1}"
+    name                          = "ipconfig"
     subnet_id                     = "${azurerm_subnet.main.id}"
     private_ip_address_allocation  = "dynamic"
     public_ip_address_id          = "${azurerm_public_ip.app_vm_public_ip.id}"
@@ -61,23 +61,23 @@ resource "azurerm_storage_account" "app_vm_boot_diagnostics" {
   }
 }
 
-# data "template_file" "azure_custom_data" {
-#   template = "${file("${path.module}/../templates/consul_client_bootstrap.sh.tpl")}"
+data "template_file" "azure_custom_data" {
+  template = "${file("${path.module}/../../templates/consul_client_bootstrap.sh.tpl")}"
 
-#   vars {
-#     papertrail_token = "${var.papertrail_token}"
-#     logic            = "${file("${path.module}/../scripts/consul_client_bootstrap.sh")}"
-#   }
-# }
+  vars {
+    papertrail_token = "${var.papertrail_token}"
+    logic            = "${file("${path.module}/../../scripts/consul_client_bootstrap.sh")}"
+  }
+}
 
 resource "azurerm_virtual_machine" "app_vm" {
-  name                          = "${var.app_name}-vms-${count.index + 1}"
+  name                          = "${var.app_name}-vm"
   location                      = "${azurerm_resource_group.resource_gp.location}"
   resource_group_name           = "${azurerm_resource_group.resource_gp.name}"
-  network_interface_ids         = ["${element(azurerm_network_interface.netint.*.id, count.index)}"]
+  network_interface_ids         = [ "${azurerm_network_interface.netint.id}" ]
   vm_size                       = "Standard_DS1_v2"
-  delete_os_disk_on_termination = true
 
+  delete_os_disk_on_termination = true
   delete_data_disks_on_termination = true
 
   storage_image_reference {
@@ -88,14 +88,14 @@ resource "azurerm_virtual_machine" "app_vm" {
   }
 
   storage_os_disk {
-    name              = "myosdisk1-${count.index + 1}"
+    name              = "vaultpuppetdisk0"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
   }
 
   os_profile {
-    computer_name  = "azure-${var.app_name}-${count.index + 1}"
+    computer_name  = "azure-${var.app_name}"
     admin_username = "ubuntu"
     admin_password = "vault-puppet-demo-1234!"
 #    custom_data    = "${data.template_file.azure_custom_data.rendered}"
