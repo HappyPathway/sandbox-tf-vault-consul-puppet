@@ -32,20 +32,18 @@ function check_deps() {
 }
 
 
-function consul_client_install() {
+function consul_agent_install() {
    echo "Downloading and installing Consul agent..."
    wget -q -c -O /tmp/consul.zip "${CONSUL_DOWNLOAD_URI}"
    unzip -o /tmp/consul.zip -d /usr/local/bin/
 
    mkdir -p /etc/consul.d /var/lib/consul
 
-
-
    consul_bind_addr=$(hostname -I | cut -d ' ' -f2)
 
    cat > /etc/consul.d/consul.hcl <<CONSULCONFIG
 data_dir="/var/lib/consul"
-retry_join=["${CONSUL_SERVER}"]
+retry_join=["${consul_server}"]
 bind_addr="${consul_bind_addr}"
 CONSULCONFIG
 
@@ -113,7 +111,7 @@ function main() {
     hello
     check_deps
 
-    consul_client_install
+    consul_agent_install
     consul_template_install
     puppet_agent_install
 

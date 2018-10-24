@@ -14,3 +14,5 @@ variable "tags" {
   type = "list"
   default = []
 }
+
+variable "consul_server" {}

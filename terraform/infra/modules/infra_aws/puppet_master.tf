@@ -14,29 +14,6 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
-data "template_file" "bootstrap_sh" {
-  template = "${file("${path.module}/../../templates/pemaster_bootstrap.sh.tpl")}"
-
-  vars {
-    papertrail_token = "${var.papertrail_token}"
-    logic = "${file("${path.module}/../../scripts/pemaster_bootstrap.sh")}"
-  }
-}
-
-data "template_cloudinit_config" "pemaster_cloudinit" {
-  # gzipped user-data causes problems for Puppet default encoding JSON v PSON
-  gzip = false
-
-  # it appears as though base64-encoded might also be causing problems
-  base64_encode = false
-
-  part {
-    filename     = "bootstrap.sh"
-    content_type = "text/x-shellscript"
-    content      = "${data.template_file.bootstrap_sh.rendered}"
-  }
-}
-
 resource "aws_security_group" "puppet-master" {
   name        = "${var.prefix}-puppet-master"
   description = "allow all in-bound to the Puppet master"
@@ -58,6 +35,30 @@ resource "aws_security_group" "puppet-master" {
 
   tags = {
     Name = "${var.prefix}-puppet-master"
+  }
+}
+
+data "template_file" "pemaster_bootstrap_sh" {
+  template = "${file("${path.module}/templates/pemaster_bootstrap.sh.tpl")}"
+
+  vars {
+    papertrail_token = "${var.papertrail_token}"
+    consul_server = "${module.vault.consul_lb_dns}"
+    logic = "${file("${path.module}/scripts/pemaster_bootstrap.sh")}"
+  }
+}
+
+data "template_cloudinit_config" "pemaster_cloudinit" {
+  # gzipped user-data causes problems for Puppet default encoding JSON v PSON
+  gzip = false
+
+  # it appears as though base64-encoded might also be causing problems
+  base64_encode = false
+
+  part {
+    filename     = "bootstrap.sh"
+    content_type = "text/x-shellscript"
+    content      = "${data.template_file.pemaster_bootstrap_sh.rendered}"
   }
 }
 

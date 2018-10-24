@@ -9,4 +9,5 @@ module "infra_google" {
   tags = "${var.infra_tags["project"]}"
 
   papertrail_token = "${var.papertrail_token}"
+  consul_server = "${module.infra_aws.consul_server_address_public}"
 }

@@ -10,3 +10,11 @@ module "vault" {
 output "ssh_private_key" {
   value = "${module.vault.private_key_pem}"
 }
+
+output "vault_server_address_public" {
+  value = "${module.vault.vault_lb_dns}"
+}
+
+output "consul_server_address_public" {
+  value = "${module.vault.consul_lb_dns}"
+}

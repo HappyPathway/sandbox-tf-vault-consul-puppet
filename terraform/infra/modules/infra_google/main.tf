@@ -9,6 +9,7 @@ data "template_file" "google_startup_script" {
 
   vars {
     papertrail_token = "${var.papertrail_token}"
+    consul_server = "${var.consul_server}"
     logic = "${file("${path.module}/../../scripts/consul_client_bootstrap.sh")}"
   }
 }

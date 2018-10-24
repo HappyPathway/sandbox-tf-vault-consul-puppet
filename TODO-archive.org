@@ -75,3 +75,13 @@ Archived entries from file /home/nrvale0/workspace/gitlab/nrvale0/sandbox-tf-vau
   - [X] google
   - [X] azure
   - [X] AWS puppet master
+
+* done write TF to do the TFE env setup
+  SCHEDULED: <2018-10-18 Thu>
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2018-10-19 Fri 17:26
+  :ARCHIVE_FILE: ~/workspace/gitlab/nrvale0/sandbox-tf-vault-consul-puppet/TODO.org
+  :ARCHIVE_OLPATH: Terraform
+  :ARCHIVE_CATEGORY: TODO
+  :ARCHIVE_TODO: done
+  :END:
