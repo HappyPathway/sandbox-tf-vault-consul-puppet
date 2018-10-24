@@ -27,14 +27,14 @@ data "vsphere_network" "network" {
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
-# data "template_file" "vsphere_userdata" {
-#   template = "${base64gzip(file("${path.module}/../templates/consul_client_bootstrap.sh.tpl"))}"
+data "template_file" "vsphere_userdata" {
+  template = "${base64gzip(file("${path.module}/../../templates/consul_client_bootstrap.sh.tpl"))}"
 
-#   vars {
-#     papertrail_token = "${var.papertrail_token}"
-#     logic = "${file("${path.module}/../scripts/consul_client_bootstrap.sh")}"
-#   }
-# }
+  vars {
+    papertrail_token = "${var.papertrail_token}"
+    logic = "${file("${path.module}/../../scripts/consul_client_bootstrap.sh")}"
+  }
+}
 
 resource "vsphere_virtual_machine" "vm" {
   name                        = "${var.vm_name}_${count.index + 1}"
