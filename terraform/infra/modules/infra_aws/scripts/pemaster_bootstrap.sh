@@ -1,7 +1,8 @@
 PAPERTRAIL_TOKEN="${papertrail_token}"
 
 : ${PE_DOWNLOAD_URI='https://pm.puppet.com/cgi-bin/download.cgi?arch=amd64&dist=ubuntu&rel=18.04&ver=latest'}
-
+: ${CONSUL_DOWNLOAD_URI='https://releases.hashicorp.com/consul/1.3.0/consul_1.3.0_linux_amd64.zip'}
+: ${CONSUL_TEMPLATE_DOWNLOAD_URI='https://releases.hashicorp.com/consul-template/0.19.5/consul-template_0.19.5_linux_amd64.zip'}
 
 function hello() {
     msg='Hello from the PE Master bootstrap script!'
@@ -15,7 +16,7 @@ function check_deps() {
     command -v hocon && command -v facter
     if [ "0" -ne "$?" ]; then
 	apt-get update
-	apt-get install -y ruby-hocon facter
+	apt-get install -y ruby-hocon facter daemonize httpie curl
     fi
 }
 
@@ -60,6 +61,46 @@ function papertrail_install() {
 }
 
 
+function consul_agent_install() {
+   echo "Downloading and installing Consul agent..."
+   wget -q -c -O /tmp/consul.zip "${CONSUL_DOWNLOAD_URI}"
+   unzip -o /tmp/consul.zip -d /usr/local/bin/
+
+   mkdir -p /etc/consul.d /var/lib/consul
+
+   consul_bind_addr=$(hostname -I | cut -d ' ' -f2)
+
+   cat > /etc/consul.d/consul.hcl <<CONSULCONFIG
+data_dir="/var/lib/consul"
+retry_join=["${consul_server}"]
+bind_addr="${consul_bind_addr}"
+CONSULCONFIG
+
+   cat /etc/consul.d/consul.hcl
+
+   pkill -TERM consul && sleep 3 && pkill -9 consul
+   consul validate /etc/consul.d
+   daemonize /usr/local/bin/consul agent -config-dir /etc/consul.d -syslog
+}
+
+
+function consul_template_install() {
+    echo "Downloading and installing consul-template..."
+    wget -q -c -O /tmp/consul-template.zip "${CONSUL_TEMPLATE_DOWNLOAD_URI}"
+    unzip -o /tmp/consul-template.zip -d /usr/local/bin/
+
+    mkdir -p /etc/consul-template.d
+    cat > /etc/consul-template.d/smokecheck.tpl <<CONSUL_TEMPLATE_CONF
+CONSUL_TEMPLATE_CONF
+
+    cat /etc/consul-template.d/smokecheck.tpl
+
+    pkill -TERM consul-template && sleep 3 && pkill -9 consul-template
+    consul-template -config /etc/consul-template.d -dry -once
+    daemonize /usr/local/bin/consul-template -config /etc/consul-template.d -syslog
+}
+
+
 function goodbye() {
     msg="PE Master bootstrap script finished."
     logger $msg
@@ -77,6 +118,8 @@ main() {
 
     set -x
     pe_install
+    consul_agent_install
+    consul_template_install
     goodbye
     exit 0
 }
