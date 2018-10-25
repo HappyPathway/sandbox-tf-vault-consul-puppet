@@ -7,17 +7,6 @@ data "template_file" "consul_server_bootstrap_sh" {
   }
 }
 
-data "template_cloudinit_config" "consul_server_cloudinit" {
-  gzip = true
-  base64_encode = true
-
-  part {
-    filename = "bootstrap.sh"
-    content_type = "text/x-shellscript"
-    content = "${data.template_file.consul_server_bootstrap_sh.rendered}"
-  }
-}
-
 module "consul" {
   source        = "git::https://github.com/hashicorp/consul-guides//operations/provision-consul/dev/terraform-aws"
   name          = "${var.prefix}"
@@ -25,7 +14,17 @@ module "consul" {
   consul_tags   = "${var.tags}"
   network_tags  = "${var.tags}"
   consul_public  = "${var.consul_is_public}"
-  consul_config_override = "${data.template_cloudinit_config.consul_server_cloudinit.rendered}"
+
+  provisioner "file" "bootstrap_sh" {
+    content = "${data.template_file.consul_server_bootstrap_sh.rendered}"
+  }
+
+  provisioner "remote-exec" "bootstrap" {
+    inline = [
+      "chmod +x /tmp/bootstrap.sh",
+      "/tmp/bootstrap.sh"
+    ]
+  }
 }
 
 output "consul_ssh_private_key" {
