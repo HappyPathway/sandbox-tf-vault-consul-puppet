@@ -44,6 +44,7 @@ data "template_file" "pemaster_bootstrap_sh" {
   vars {
     papertrail_token = "${var.papertrail_token}"
     consul_server = "${module.consul.consul_lb_dns}"
+    cluster_name = "${var.prefix}"
     logic = "${file("${path.module}/scripts/pemaster_bootstrap.sh")}"
   }
 }

@@ -37,6 +37,10 @@ function consul_server_config() {
     bind_addr="$(facter ipaddress)"
     advertise_addr="$(http -b http://169.254.169.254/latest/meta-data/public-ipv4)"
 
+    mkdir -p /var/lib/consul
+    chown -R consul.consul /var/lib/consul
+    chgrp -R 770 /var/lib/consul
+
     tee /etc/consul.d/z-consul.hcl <<EOF
 server=true
 log_level="info"
@@ -44,7 +48,7 @@ client_addr="0.0.0.0"
 ui=true
 bind_addr="${bind_addr}"
 advertise_addr="${advertise_addr}"
-data_dir="/var/consul"
+data_dir="/var/lib/consul"
 EOF
 
     consul validate /etc/consul.d

@@ -1,4 +1,5 @@
 PAPERTRAIL_TOKEN="${papertrail_token}"
+CLUSTER_NAME="${cluster_name}"
 
 : ${PE_DOWNLOAD_URI='https://pm.puppet.com/cgi-bin/download.cgi?arch=amd64&dist=ubuntu&rel=18.04&ver=latest'}
 : ${CONSUL_DOWNLOAD_URI='https://releases.hashicorp.com/consul/1.3.0/consul_1.3.0_linux_amd64.zip'}
@@ -77,13 +78,14 @@ data_dir="/var/lib/consul"
 retry_join=["${consul_server}"]
 bind_addr="${consul_bind_addr}"
 advertise_addr="${advertise_addr}"
+datacenter="${CLUSTER_NAME}"
 CONSULCONFIG
 
    cat /etc/consul.d/consul.hcl
 
    consul validate /etc/consul.d
    pkill -TERM consul && sleep 3 && pkill -9 consul
-   daemonize /usr/local/bin/consul -config-dir /etc/consul.d -syslog
+   daemonize /usr/local/bin/consul agent -config-dir /etc/consul.d -syslog
 }
 
 
