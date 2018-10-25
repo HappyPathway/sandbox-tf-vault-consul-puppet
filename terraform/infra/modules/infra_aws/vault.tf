@@ -6,7 +6,7 @@ module "vault" {
   vault_public  = "${var.vault_is_public}"
 }
 
-output "ssh_private_key" {
+output "vault_ssh_private_key" {
   value = "${module.vault.private_key_pem}"
 }
 

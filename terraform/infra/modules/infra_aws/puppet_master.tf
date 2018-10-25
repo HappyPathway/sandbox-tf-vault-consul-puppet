@@ -43,7 +43,7 @@ data "template_file" "pemaster_bootstrap_sh" {
 
   vars {
     papertrail_token = "${var.papertrail_token}"
-    consul_server = "${module.vault.consul_lb_dns}"
+    consul_server = "${module.consul.consul_lb_dns}"
     logic = "${file("${path.module}/scripts/pemaster_bootstrap.sh")}"
   }
 }

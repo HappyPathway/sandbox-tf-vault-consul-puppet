@@ -83,7 +83,7 @@ CONSULCONFIG
 
    consul validate /etc/consul.d
    pkill -TERM consul && sleep 3 && pkill -9 consul
-   daemonize /usr/local/bin/consul agent -config-dir /etc/consul.d -syslog
+   daemonize /usr/local/bin/consul -config-dir /etc/consul.d -syslog
 }
 
 
