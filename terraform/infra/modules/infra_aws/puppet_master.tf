@@ -79,5 +79,5 @@ resource "aws_instance" "puppet-master" {
 }
 
 output "puppet_master_address_public" {
-  value = "${aws_instance.puppet-master.public_ip}"
+  value = "${aws_instance.puppet-master.public_dns}"
 }

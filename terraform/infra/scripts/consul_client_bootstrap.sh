@@ -27,7 +27,7 @@ function check_deps() {
 	export DEBIAN_FRONTEND=noninteractive
 	export DEBCONF_NONINTERACTIVE_SEEN=true
 	apt-get update
-	apt-get install -y zip daemonize httpie curl
+	apt-get install -y zip daemonize httpie curl dnsmasq-base dnsmasq-utils
     fi
 }
 

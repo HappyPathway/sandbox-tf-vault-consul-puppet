@@ -13,10 +13,10 @@ function hello() {
 
 function check_deps() {
     echo "Checking for required software..."
-    command -v hocon && command -v facter
+    command -v hocon && command -v facter && command -v httpie && command -v curl
     if [ "0" -ne "$?" ]; then
 	apt-get update
-	apt-get install -y ruby-hocon facter daemonize httpie curl
+	apt-get install -y ruby-hocon facter daemonize httpie curl dnsmasq-base dnsmasq-utils
     fi
 }
 
@@ -34,7 +34,7 @@ function pe_install() {
     # There are a number of settings which have to be adjust to ensure proper operation though
     # an AWS loadbalancer.
     hocon -f /tmp/pe/conf.d/pe.conf set pe_install\"::\"master_pool_address "${public_hostname}"
-    hocon -f /tmp/pe/conf.d/pe.conf set pe_install\"::\"puppet_master_dnsaltnames "[ \"${public_hostname}\" ]"
+    hocon -f /tmp/pe/conf.d/pe.conf set pe_install\"::\"puppet_master_dnsaltnames "[ \"${public_hostname}\", \"puppet.node.dc1.consul\" ]"
     hocon -f /tmp/pe/conf.d/pe.conf set pe_repo\"::\"master "${public_hostname}"
     hocon -f /tmp/pe/conf.d/pe.conf set puppet_enterprise\"::\"profile\"::\"agent\"::\"master_uris "[ \"https://${public_hostname}:8140\" ]"
     hocon -f /tmp/pe/conf.d/pe.conf set puppet_enterprise\"::\"profile\"::\"agent\"::\"pcp_broker_list "[ \"https://${public_hostname}:8140\" ]"
@@ -69,11 +69,13 @@ function consul_agent_install() {
    mkdir -p /etc/consul.d /var/lib/consul
 
    consul_bind_addr=$(hostname -I | cut -d ' ' -f2)
+   public_hostname="$(facter ec2_metadata.public-hostname)"
 
    cat > /etc/consul.d/consul.hcl <<CONSULCONFIG
 data_dir="/var/lib/consul"
 retry_join=["${consul_server}"]
 bind_addr="${consul_bind_addr}"
+advertise_addr="${public_hostname}"
 CONSULCONFIG
 
    cat /etc/consul.d/consul.hcl
@@ -101,6 +103,14 @@ CONSUL_TEMPLATE_CONF
 }
 
 
+function dnsmasq_configure() {
+    cat > /etc/dnsmasq.d/10-consul <<EOF
+server=/consul/127.0.0.1:8600
+EOF
+    pkill -HUP dnsmasq
+}
+
+
 function goodbye() {
     msg="PE Master bootstrap script finished."
     logger $msg
@@ -117,9 +127,10 @@ main() {
     check_deps
 
     set -x
-    pe_install
     consul_agent_install
     consul_template_install
+    dnsmasq_configure
+    pe_install
     goodbye
     exit 0
 }
