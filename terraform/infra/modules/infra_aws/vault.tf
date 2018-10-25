@@ -1,6 +1,7 @@
 module "vault" {
   source        = "git::https://github.com/hashicorp/vault-guides//operations/provision-vault/dev/terraform-aws"
   name          = "${var.prefix}"
+  vault_servers = 1
   vault_tags    = "${var.tags}"
   network_tags  = "${var.tags}"
   vault_public  = "${var.vault_is_public}"

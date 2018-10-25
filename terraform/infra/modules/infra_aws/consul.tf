@@ -21,6 +21,7 @@ data "template_cloudinit_config" "consul_server_cloudinit" {
 module "consul" {
   source        = "git::https://github.com/hashicorp/consul-guides//operations/provision-consul/dev/terraform-aws"
   name          = "${var.prefix}"
+  consul_servers = 1 
   consul_tags   = "${var.tags}"
   network_tags  = "${var.tags}"
   consul_public  = "${var.consul_is_public}"
