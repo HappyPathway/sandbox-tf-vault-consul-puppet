@@ -11,8 +11,7 @@ function check_deps() {
     echo "Checking for required software..."
     command -v facter && command -v httpie && command -v curl
     if [ "0" -ne "$?" ]; then
-	apt-get update
-	apt-get install -y facter httpie curl dnsmasq-base dnsmasq-utils bmon mosh
+	yum install -y facter httpie curl dnsmasq-base dnsmasq-utils bmon mosh
     fi
 }
 
@@ -35,24 +34,21 @@ EOF
 
 
 function consul_server_config() {
-    service consul stop
-    rm -f /etc/consul.d/*
-
     bind_addr="$(facter ipaddress)"
-    advertise_addr="$(facter ec2_metadata.public-ipv4)"
+    advertise_addr="$(http -b http://169.254.169.254/latest/meta-data/public-ipv4)"
 
-    tee /etc/consul.d/consul.hcl <<EOF
+    tee /etc/consul.d/z-consul.hcl <<EOF
 server=true
 log_level="info"
 client_addr="0.0.0.0"
 ui=true
 bind_addr="${bind_addr}"
 advertise_addr="${advertise_addr}"
+data_dir="/var/consul"
 EOF
 
-    cat /etc/consul.d/consul.hcl
     consul validate /etc/consul.d
-    service consul start
+    service consul restart
 }
 
 function goodbye() {

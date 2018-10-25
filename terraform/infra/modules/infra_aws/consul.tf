@@ -7,15 +7,15 @@ data "template_file" "consul_server_bootstrap_sh" {
   }
 }
 
-data "template_cloudinit_config" "consul_server_bootstrap_sh" {
-  gzip = true
-  base64_encode = true
-  part {
-    filename = "bootstrap.sh"
-    content_type = "text/x-shellscript"
-    content = "${data.template_file.consul_server_bootstrap_sh.rendered}"
-  }
-}
+# data "template_cloudinit_config" "consul_server_bootstrap_sh" {
+#   gzip = true
+#   base64_encode = true
+#   part {
+#     filename = "bootstrap.sh"
+#     content_type = "text/x-shellscript"
+#     content = "${data.template_file.consul_server_bootstrap_sh.rendered}"
+#   }
+# }
 
 module "consul" {
   source        = "git::https://github.com/nrvale0/consul-guides//operations/provision-consul/dev/terraform-aws?ref=provision-dev-custom-user-data"
@@ -24,7 +24,7 @@ module "consul" {
   consul_tags   = "${var.tags}"
   network_tags  = "${var.tags}"
   consul_public  = "${var.consul_is_public}"
-  consul_user-data      = "${data.template_cloudinit_config.consul_server_bootstrap_sh.rendered}"
+  consul_user-data = "${data.template_file.consul_server_bootstrap_sh.rendered}"
 }
 
 output "consul_ssh_private_key" {
