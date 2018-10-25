@@ -77,3 +77,7 @@ resource "aws_instance" "puppet-master" {
   #   Name = "${var.prefix}-vault-puppet"
   # }
 }
+
+output "puppet_master_address_public" {
+  value = "${aws_instance.puppet-master.public_ip}"
+}

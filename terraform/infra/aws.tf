@@ -18,3 +18,7 @@ output "vault_server_address" {
 output "consul_server_address" {
   value = "${module.infra_aws.consul_server_address_public}"
 }
+
+output "puppet_master_address" {
+  value = "${module.infra_aws.puppet_master_address_public}"
+}
