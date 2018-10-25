@@ -27,7 +27,7 @@ function check_deps() {
 	export DEBIAN_FRONTEND=noninteractive
 	export DEBCONF_NONINTERACTIVE_SEEN=true
 	apt-get update
-	apt-get install -y zip daemonize httpie curl dnsmasq-base dnsmasq-utils
+	apt-get install -y zip daemonize httpie curl dnsmasq-base dnsmasq-utils bmon
     fi
 }
 
@@ -39,7 +39,7 @@ function consul_agent_install() {
 
    mkdir -p /etc/consul.d /var/lib/consul
 
-   consul_bind_addr=$(hostname -I | cut -d ' ' -f2)
+   consul_bind_addr="$(facter ipaddress)"
 
    cat > /etc/consul.d/consul.hcl <<CONSULCONFIG
 data_dir="/var/lib/consul"
@@ -48,9 +48,8 @@ bind_addr="${consul_bind_addr}"
 CONSULCONFIG
 
    cat /etc/consul.d/consul.hcl
-
-   pkill -TERM consul && sleep 3 && pkill -9 consul
    consul validate /etc/consul.d
+   pkill -TERM consul && sleep 3 && pkill -9 consul
    daemonize /usr/local/bin/consul agent -config-dir /etc/consul.d -syslog
 }
 

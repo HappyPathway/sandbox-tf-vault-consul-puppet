@@ -16,7 +16,7 @@ function check_deps() {
     command -v hocon && command -v facter && command -v httpie && command -v curl
     if [ "0" -ne "$?" ]; then
 	apt-get update
-	apt-get install -y ruby-hocon facter daemonize httpie curl dnsmasq-base dnsmasq-utils
+	apt-get install -y ruby-hocon facter daemonize httpie curl dnsmasq-base dnsmasq-utils bmon mosh
     fi
 }
 
@@ -68,20 +68,21 @@ function consul_agent_install() {
 
    mkdir -p /etc/consul.d /var/lib/consul
 
-   consul_bind_addr=$(hostname -I | cut -d ' ' -f2)
-   public_hostname="$(facter ec2_metadata.public-hostname)"
+   consul_bind_addr="$(hostname -I | cut -d ' ' -f2)"
+   consul_bind_addr="$(facter ipaddress)"
+   advertise_addr="$(facter ec2_metadata.public-ipv4)"
 
    cat > /etc/consul.d/consul.hcl <<CONSULCONFIG
 data_dir="/var/lib/consul"
 retry_join=["${consul_server}"]
 bind_addr="${consul_bind_addr}"
-advertise_addr="${public_hostname}"
+advertise_addr="${advertise_addr}"
 CONSULCONFIG
 
    cat /etc/consul.d/consul.hcl
 
-   pkill -TERM consul && sleep 3 && pkill -9 consul
    consul validate /etc/consul.d
+   pkill -TERM consul && sleep 3 && pkill -9 consul
    daemonize /usr/local/bin/consul agent -config-dir /etc/consul.d -syslog
 }
 

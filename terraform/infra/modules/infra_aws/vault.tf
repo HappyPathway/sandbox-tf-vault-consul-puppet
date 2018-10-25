@@ -5,6 +5,8 @@ module "vault" {
   network_tags  = "${var.tags}"
   consul_public = "${var.consul_is_public}"
   vault_public  = "${var.vault_is_public}"
+  consul_servers = 1
+  vault_servers  = 1
 }
 
 output "ssh_private_key" {
