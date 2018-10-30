@@ -43,9 +43,9 @@ data "template_file" "pemaster_bootstrap_sh" {
 
   vars {
     papertrail_token = "${var.papertrail_token}"
-    consul_server = "${module.consul.consul_lb_dns}"
-    cluster_name = "${var.prefix}"
-    logic = "${file("${path.module}/scripts/pemaster_bootstrap.sh")}"
+    consul_server    = "${module.consul.consul_lb_dns}"
+    cluster_name     = "${var.prefix}"
+    logic            = "${file("${path.module}/scripts/pemaster_bootstrap.sh")}"
   }
 }
 
@@ -69,14 +69,10 @@ resource "aws_instance" "puppet-master" {
   tags          = "${merge(var.tags, map("Name", "${var.prefix}-puppet-master"))}"
   subnet_id     = "${element(module.vault.subnet_public_ids, 0)}"
 
-  user_data     = "${data.template_cloudinit_config.pemaster_cloudinit.rendered}"
+  user_data                   = "${data.template_cloudinit_config.pemaster_cloudinit.rendered}"
   key_name                    = "${module.vault.ssh_key_name}"
   associate_public_ip_address = true
   vpc_security_group_ids      = ["${aws_security_group.puppet-master.id}"]
-
-  # tags {
-  #   Name = "${var.prefix}-vault-puppet"
-  # }
 }
 
 output "puppet_master_address_public" {

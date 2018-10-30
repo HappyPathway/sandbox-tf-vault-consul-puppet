@@ -3,27 +3,18 @@ data "template_file" "consul_server_bootstrap_sh" {
 
   vars {
     papertrail_token = "${var.papertrail_token}"
-    logic = "${file("${path.module}/scripts/consul_server_bootstrap.sh")}"
+    logic            = "${file("${path.module}/scripts/consul_server_bootstrap.sh")}"
   }
 }
 
-# data "template_cloudinit_config" "consul_server_bootstrap_sh" {
-#   gzip = true
-#   base64_encode = true
-#   part {
-#     filename = "bootstrap.sh"
-#     content_type = "text/x-shellscript"
-#     content = "${data.template_file.consul_server_bootstrap_sh.rendered}"
-#   }
-# }
-
 module "consul" {
-  source        = "git::https://github.com/nrvale0/consul-guides//operations/provision-consul/dev/terraform-aws?ref=provision-dev-custom-user-data"
-  name          = "${var.prefix}"
-  consul_servers = 1
-  consul_tags   = "${var.tags}"
-  network_tags  = "${var.tags}"
-  consul_public  = "${var.consul_is_public}"
+  source           = "git::https://github.com/nrvale0/consul-guides//operations/provision-consul/dev/terraform-aws?ref=provision-dev-custom-user-data"
+  name             = "${var.prefix}"
+  consul_servers   = 1
+  consul_tags      = "${var.tags}"
+  network_tags     = "${var.tags}"
+  consul_public    = "${var.consul_is_public}"
+  consul_version   = "1.3.0"
   consul_user-data = "${data.template_file.consul_server_bootstrap_sh.rendered}"
 }
 
