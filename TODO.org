@@ -5,6 +5,8 @@
 
 * maybe Packer builds in CircleCI
 * todo Terraform
+** next Have the Consul agents get the Consul leader address from the AWS LB
+   SCHEDULED: <2018-10-28 Sun>
 ** maybe create the build tools container
 ** maybe trigger TFE runs from GitlabCI
 ** todo AWS Puppet infra

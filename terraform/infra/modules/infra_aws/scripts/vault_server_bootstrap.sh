@@ -1,7 +1,7 @@
 PAPERTRAIL_TOKEN="${papertrail_token}"
 
 function hello() {
-    msg='Hello from the Consul Server bootstrap script!'
+    msg='Hello from the Vault Server bootstrap script!'
     logger $msg
     echo $msg
 }
@@ -26,37 +26,37 @@ function papertrail_install() {
 
 
 function dnsmasq_configure() {
-    tee /etc/dnsmasq.d/10-consul <<EOF
-server=/consul/127.0.0.1:8600
+    tee /etc/dnsmasq.d/10-vault <<EOF
+server=/vault/127.0.0.1:8600
 EOF
     pkill -HUP dnsmasq
 }
 
 
-function consul_server_config() {
+function vault_server_config() {
     bind_addr="$(facter ipaddress)"
     advertise_addr="$(http -b http://169.254.169.254/latest/meta-data/public-ipv4)"
 
-    mkdir -p /var/lib/consul
-    chown -R consul.consul /var/lib/consul
-    chgrp -R 770 /var/lib/consul
+    mkdir -p /var/lib/vault
+    chown -R vault.vault /var/lib/vault
+    chgrp -R 770 /var/lib/vault
 
-    tee /etc/consul.d/z-consul.hcl <<EOF
+    tee /etc/vault.d/z-vault.hcl <<EOF
 server=true
 log_level="info"
 client_addr="0.0.0.0"
 ui=true
 bind_addr="${bind_addr}"
 advertise_addr="${advertise_addr}"
-data_dir="/var/lib/consul"
+data_dir="/var/lib/vault"
 EOF
 
-    consul validate /etc/consul.d
-    service consul restart
+    vault validate /etc/vault.d
+    service vault restart
 }
 
 function goodbye() {
-    msg='Consul Server bootstrap script finished.'
+    msg='Vault Server bootstrap script finished.'
     logger $msg
     echo $msg
 }
@@ -72,7 +72,7 @@ main() {
 
     set -x
     dnsmasq_configure
-    consul_server_config
+    vault_server_config
     goodbye
     exit 0
 }
