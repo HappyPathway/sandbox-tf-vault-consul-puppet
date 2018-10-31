@@ -123,8 +123,8 @@ function main() {
     hello
     check_deps
 
-    consul_agent_install
     dnsmasq_configure
+    consul_agent_install
     consul_template_install
     puppet_agent_install
 

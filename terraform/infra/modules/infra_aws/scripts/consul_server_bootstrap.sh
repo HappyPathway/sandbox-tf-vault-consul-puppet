@@ -34,6 +34,8 @@ EOF
     tee /etc/NetworkManager/dnsmasq.d/10-consul <<EOF
 server=/consul/127.0.0.1#8600
 EOF
+    systemctl stop dnsmasq
+    systemctl disable dnsmasq
     pkill -HUP NetworkManager
 }
 
