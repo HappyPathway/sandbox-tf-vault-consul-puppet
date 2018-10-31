@@ -41,7 +41,8 @@ function pe_install() {
     hocon -f /tmp/pe/conf.d/pe.conf set puppet_enterprise\"::\"profile\"::\"agent\"::\"pcp_broker_list "[ \"https://${public_hostname}:8140\" ]"
     hocon -f /tmp/pe/conf.d/pe.conf set puppet_enterprise\"::\"profile\"::\"master\"::\"r10k_remote "https\"://\"gitlab.com/nrvale0/sandbox-tf-vault-consul-puppet-control-repo"
     hocon -f /tmp/pe/conf.d/pe.conf set puppet_enterprise\"::\"profile\"::\"master\"::\"code_manager_auto_configure true
-
+    hocon -f /tmp/pe/conf.d/pe.conf set pe_repo::platform::el_7_x86_64
+    
     /tmp/pe/puppet-enterprise-installer -c /tmp/pe/conf.d/pe.conf -y
 
     sleep 10
@@ -64,58 +65,6 @@ function papertrail_install() {
 }
 
 
-function consul_agent_install() {
-   echo "Downloading and installing Consul agent..."
-   wget -q -c -O /tmp/consul.zip "${CONSUL_DOWNLOAD_URI}"
-   unzip -o /tmp/consul.zip -d /usr/local/bin/
-
-   mkdir -p /etc/consul.d /var/lib/consul
-
-   consul_bind_addr="$(hostname -I | cut -d ' ' -f2)"
-   consul_bind_addr="$(facter ipaddress)"
-   advertise_addr="$(facter ec2_metadata.public-ipv4)"
-
-   cat > /etc/consul.d/consul.hcl <<CONSULCONFIG
-data_dir="/var/lib/consul"
-retry_join=["${consul_server}"]
-bind_addr="${consul_bind_addr}"
-advertise_addr="${advertise_addr}"
-datacenter="${CLUSTER_NAME}"
-CONSULCONFIG
-
-   cat /etc/consul.d/consul.hcl
-
-   consul validate /etc/consul.d
-   pkill -TERM consul && sleep 3 && pkill -9 consul
-   daemonize /usr/local/bin/consul agent -config-dir /etc/consul.d -syslog
-}
-
-
-function consul_template_install() {
-    echo "Downloading and installing consul-template..."
-    wget -q -c -O /tmp/consul-template.zip "${CONSUL_TEMPLATE_DOWNLOAD_URI}"
-    unzip -o /tmp/consul-template.zip -d /usr/local/bin/
-
-    mkdir -p /etc/consul-template.d
-    cat > /etc/consul-template.d/smokecheck.tpl <<CONSUL_TEMPLATE_CONF
-CONSUL_TEMPLATE_CONF
-
-    cat /etc/consul-template.d/smokecheck.tpl
-
-    pkill -TERM consul-template && sleep 3 && pkill -9 consul-template
-    consul-template -config /etc/consul-template.d -dry -once
-    daemonize /usr/local/bin/consul-template -config /etc/consul-template.d -syslog
-}
-
-
-# function dnsmasq_configure() {
-#     cat > /etc/dnsmasq.d/10-consul <<EOF
-# server=/consul/127.0.0.1:8600
-# EOF
-#     pkill -HUP dnsmasq
-# }
-
-
 function goodbye() {
     msg="PE Master bootstrap script finished."
     logger $msg
@@ -132,9 +81,6 @@ main() {
     check_deps
 
     set -x
-    consul_agent_install
-    consul_template_install
-#    dnsmasq_configure
     pe_install
     goodbye
     exit 0
