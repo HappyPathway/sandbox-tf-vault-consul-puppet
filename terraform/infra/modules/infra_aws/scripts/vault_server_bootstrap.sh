@@ -71,7 +71,7 @@ main() {
 
     set -x
     #    vault_server_config
-    pupppet_agent_install
+    puppet_agent_install
     goodbye
     exit 0
 }

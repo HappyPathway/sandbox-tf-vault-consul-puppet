@@ -39,6 +39,8 @@ function pe_install() {
     hocon -f /tmp/pe/conf.d/pe.conf set pe_repo\"::\"master "${public_hostname}"
     hocon -f /tmp/pe/conf.d/pe.conf set puppet_enterprise\"::\"profile\"::\"agent\"::\"master_uris "[ \"https://${public_hostname}:8140\" ]"
     hocon -f /tmp/pe/conf.d/pe.conf set puppet_enterprise\"::\"profile\"::\"agent\"::\"pcp_broker_list "[ \"https://${public_hostname}:8140\" ]"
+    hocon -f /tmp/pe/conf.d/pe.conf set puppet_enterprise\"::\"profile\"::\"master\"::\"r10k_remote "https\"://\"gitlab.com/nrvale0/sandbox-tf-vault-consul-puppet-control-repo"
+    hocon -f /tmp/pe/conf.d/pe.conf set puppet_enterprise\"::\"profile\"::\"master\"::\"code_manager_auto_configure true
 
     /tmp/pe/puppet-enterprise-installer -c /tmp/pe/conf.d/pe.conf -y
 
@@ -106,12 +108,12 @@ CONSUL_TEMPLATE_CONF
 }
 
 
-function dnsmasq_configure() {
-    cat > /etc/dnsmasq.d/10-consul <<EOF
-server=/consul/127.0.0.1:8600
-EOF
-    pkill -HUP dnsmasq
-}
+# function dnsmasq_configure() {
+#     cat > /etc/dnsmasq.d/10-consul <<EOF
+# server=/consul/127.0.0.1:8600
+# EOF
+#     pkill -HUP dnsmasq
+# }
 
 
 function goodbye() {
@@ -132,7 +134,7 @@ main() {
     set -x
     consul_agent_install
     consul_template_install
-    dnsmasq_configure
+#    dnsmasq_configure
     pe_install
     goodbye
     exit 0
