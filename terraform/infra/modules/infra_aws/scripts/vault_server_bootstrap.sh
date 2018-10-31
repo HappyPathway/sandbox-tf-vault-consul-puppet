@@ -25,14 +25,6 @@ function papertrail_install() {
 }
 
 
-function dnsmasq_configure() {
-    tee /etc/dnsmasq.d/10-vault <<EOF
-server=/vault/127.0.0.1:8600
-EOF
-    pkill -HUP dnsmasq
-}
-
-
 function vault_server_config() {
     bind_addr="$(facter ipaddress)"
     advertise_addr="$(http -b http://169.254.169.254/latest/meta-data/public-ipv4)"
@@ -71,7 +63,6 @@ main() {
     check_deps
 
     set -x
-    dnsmasq_configure
     vault_server_config
     goodbye
     exit 0

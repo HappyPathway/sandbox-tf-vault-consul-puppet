@@ -26,10 +26,15 @@ function papertrail_install() {
 
 
 function dnsmasq_configure() {
-    tee /etc/dnsmasq.d/10-consul <<EOF
-server=/consul/127.0.0.1:8600
+    tee /etc/NetworkManager/conf.d/10-dnsmasq.conf <<EOF
+[main]
+dns=dnsmasq
 EOF
-    pkill -HUP dnsmasq
+
+    tee /etc/NetworkManager/dnsmasq.d/10-consul <<EOF
+server=/consul/127.0.0.1#8600
+EOF
+    pkill -HUP NetworkManager
 }
 
 

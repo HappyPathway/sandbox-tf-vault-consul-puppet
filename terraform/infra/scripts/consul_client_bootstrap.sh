@@ -27,7 +27,7 @@ function check_deps() {
 	export DEBIAN_FRONTEND=noninteractive
 	export DEBCONF_NONINTERACTIVE_SEEN=true
 	apt-get update
-	apt-get install -y zip daemonize httpie curl dnsmasq-base dnsmasq-utils bmon
+	apt-get install -y zip daemonize httpie curl network-manager dnsmasq-base dnsmasq-utils bmon
     fi
 }
 
@@ -102,6 +102,19 @@ function papertrail_install() {
 }
 
 
+function dnsmasq_configure() {
+    tee /etc/NetworkManager/conf.d/10-dnsmasq.conf <<EOF
+[main]
+dns=dnsmasq
+EOF
+
+    tee /etc/NetworkManager/dnsmasq.d/10-consul <<EOF
+server=/consul/127.0.0.1#8600
+EOF
+    pkill -HUP NetworkManager
+}
+
+
 function main() {
     set -eu
     papertrail_install
@@ -111,6 +124,7 @@ function main() {
     check_deps
 
     consul_agent_install
+    dnsmasq_configure
     consul_template_install
     puppet_agent_install
 
