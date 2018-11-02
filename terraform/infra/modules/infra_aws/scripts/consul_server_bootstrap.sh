@@ -29,6 +29,17 @@ function papertrail_install() {
 
 function puppet_agent_install() {
     echo "Installing Puppet agent..."
+
+    while true; do
+	set +e
+	sleep 3
+	http --verify no "https://${PUPPET_MASTER_ADDR}:8140/packages/current/install.bash" > /dev/null 2>&1
+	if [ "$?" -eq "0" ]; then
+	    break
+	fi
+    done
+    set -e
+
     curl \
 	-k \
 	--retry 100 \

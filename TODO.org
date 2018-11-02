@@ -5,13 +5,12 @@
 
 * maybe Packer builds in CircleCI
 * todo Terraform
-** next feed the additional pe_repo's to the text-mode installer
-   DEADLINE: <2018-10-31 Wed>
+** next have the non-AWS nodes register with the Puppet Master
+   DEADLINE: <2018-11-02 Fri> SCHEDULED: <2018-11-02 Fri>
 ** maybe Have the Consul agents get the Consul leader address from the AWS LB
 ** maybe create the build tools container
 ** maybe trigger TFE runs from GitlabCI
 ** todo AWS Puppet infra
-*** maybe add TF to pass cloudinit to Vault and Consul
 *** vSphere [0/3]
 **** todo get node a public IP
 **** todo papertrail for this node
