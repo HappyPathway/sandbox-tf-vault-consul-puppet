@@ -15,7 +15,13 @@ function hello() {
 function check_deps() {
     echo "Checking for required software..."
     command -v hocon && command -v facter && command -v httpie && command -v curl
+
     if [ "0" -ne "$?" ]; then
+
+	# Why are the AWS mirrors so freakin' slow?
+	cp /etc/apt/sources.list /tmp/
+	echo 'deb mirror://mirrors.ubuntu.com/mirrors.txt bionic main restricted universe multiverse' > /etc/apt/sources.list
+	cat /tmp/sources.list >> /etc/apt/sources.list
 	apt-get update
 	apt-get install -y ruby-hocon facter daemonize httpie curl dnsmasq-base dnsmasq-utils bmon mosh
     fi
@@ -41,7 +47,7 @@ function pe_install() {
     hocon -f /tmp/pe/conf.d/pe.conf set puppet_enterprise\"::\"profile\"::\"agent\"::\"pcp_broker_list "[ \"https://${public_hostname}:8140\" ]"
     hocon -f /tmp/pe/conf.d/pe.conf set puppet_enterprise\"::\"profile\"::\"master\"::\"r10k_remote "https\"://\"gitlab.com/nrvale0/sandbox-tf-vault-consul-puppet-control-repo"
     hocon -f /tmp/pe/conf.d/pe.conf set puppet_enterprise\"::\"profile\"::\"master\"::\"code_manager_auto_configure true
-    hocon -f /tmp/pe/conf.d/pe.conf set agent_platforms "[ \"el-7-x86_64\", \"ubunbu-14.04-amd64\" ]"
+    hocon -f /tmp/pe/conf.d/pe.conf set agent_platforms "[ \"el-7-x86_64\", \"ubuntu-14.04-amd64\" ]"
 
     /tmp/pe/puppet-enterprise-installer -c /tmp/pe/conf.d/pe.conf -y
 
