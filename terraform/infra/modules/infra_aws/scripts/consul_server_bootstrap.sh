@@ -1,4 +1,6 @@
 PAPERTRAIL_TOKEN="${papertrail_token}"
+PUPPET_MASTER_ADDR="${puppet_master_addr}"
+
 
 function hello() {
     msg='Hello from the Consul Server bootstrap script!'
@@ -25,20 +27,16 @@ function papertrail_install() {
 }
 
 
-function dnsmasq_configure() {
-    tee /etc/NetworkManager/conf.d/10-dnsmasq.conf <<EOF
-[main]
-dns=dnsmasq
-EOF
-
-    tee /etc/NetworkManager/dnsmasq.d/10-consul <<EOF
-server=/consul/127.0.0.1#8600
-EOF
-    systemctl stop dnsmasq
-    systemctl disable dnsmasq
-    pkill -HUP NetworkManager
+function puppet_agent_install() {
+    echo "Installing Puppet agent..."
+    curl \
+	-k \
+	--retry 100 \
+	--max-time 10 \
+	--retry-delay 0 \
+	--retry-max-time 600 \
+	"https://${PUPPET_MASTER_ADDR}:8140/packages/current/install.bash" | bash
 }
-
 
 function consul_server_config() {
     bind_addr="$(facter ipaddress)"
@@ -78,8 +76,7 @@ main() {
     check_deps
 
     set -x
-    dnsmasq_configure
-    consul_server_config
+    puppet_agent_install
     goodbye
     exit 0
 }

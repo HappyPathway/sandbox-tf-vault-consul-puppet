@@ -1,6 +1,7 @@
 PAPERTRAIL_TOKEN="${papertrail_token}"
 PUPPET_MASTER_ADDR="${puppet_master_addr}"
 
+
 function hello() {
     msg='Hello from the Vault Server bootstrap script!'
     logger $msg
@@ -26,35 +27,6 @@ function papertrail_install() {
 }
 
 
-# function vault_server_config() {
-#     bind_addr="$(facter ipaddress)"
-#     advertise_addr="$(http -b http://169.254.169.254/latest/meta-data/public-ipv4)"
-
-#     mkdir -p /var/lib/vault
-#     chown -R vault.vault /var/lib/vault
-#     chgrp -R 770 /var/lib/vault
-
-#     tee /etc/vault.d/z-vault.hcl <<EOF
-# server=true
-# log_level="info"
-# client_addr="0.0.0.0"
-# ui=true
-# bind_addr="${bind_addr}"
-# advertise_addr="${advertise_addr}"
-# data_dir="/var/lib/vault"
-# EOF
-
-#     vault validate /etc/vault.d
-#     service vault restart
-# }
-
-function goodbye() {
-    msg='Vault Server bootstrap script finished.'
-    logger $msg
-    echo $msg
-}
-
-
 function puppet_agent_install() {
     echo "Installing Puppet agent..."
     curl \
@@ -64,6 +36,13 @@ function puppet_agent_install() {
 	--retry-delay 0 \
 	--retry-max-time 600 \
 	"https://${PUPPET_MASTER_ADDR}:8140/packages/current/install.bash" | bash
+}
+
+
+function goodbye() {
+    msg='Vault Server bootstrap script finished.'
+    logger $msg
+    echo $msg
 }
 
 

@@ -2,8 +2,9 @@ data "template_file" "consul_server_bootstrap_sh" {
   template = "${file("${path.module}/templates/consul_server_bootstrap.sh.tpl")}"
 
   vars {
-    papertrail_token = "${var.papertrail_token}"
-    logic            = "${file("${path.module}/scripts/consul_server_bootstrap.sh")}"
+    papertrail_token   = "${var.papertrail_token}"
+    puppet_master_addr = "${aws_instance.puppet-master.public_dns}"
+    logic              = "${file("${path.module}/scripts/consul_server_bootstrap.sh")}"
   }
 }
 
