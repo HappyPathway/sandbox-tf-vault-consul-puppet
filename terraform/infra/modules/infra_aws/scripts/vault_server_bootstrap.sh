@@ -57,7 +57,13 @@ function goodbye() {
 
 function puppet_agent_install() {
     echo "Installing Puppet agent..."
-    curl -k "https://${PUPPET_MASTER_ADDR}:8140/packages/current/install.bash" | bash
+    curl \
+	-k \
+	--retry 100 \
+	--max-time 10 \
+	--retry-delay 0 \
+	--retry-max-time 600 \
+	"https://${PUPPET_MASTER_ADDR}:8140/packages/current/install.bash" | bash
 }
 
 
