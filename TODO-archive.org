@@ -85,3 +85,22 @@ Archived entries from file /home/nrvale0/workspace/gitlab/nrvale0/sandbox-tf-vau
   :ARCHIVE_CATEGORY: TODO
   :ARCHIVE_TODO: done
   :END:
+
+* done add TF to pass cloudinit to Vault and Consul
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2018-11-02 Fri 13:35
+  :ARCHIVE_FILE: ~/workspace/gitlab/nrvale0/sandbox-tf-vault-consul-puppet/TODO.org
+  :ARCHIVE_OLPATH: Terraform/AWS Puppet infra
+  :ARCHIVE_CATEGORY: TODO
+  :ARCHIVE_TODO: done
+  :END:
+
+* done feed the additional pe_repo's to the text-mode installer
+  DEADLINE: <2018-10-31 Wed>
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2018-11-02 Fri 13:35
+  :ARCHIVE_FILE: ~/workspace/gitlab/nrvale0/sandbox-tf-vault-consul-puppet/TODO.org
+  :ARCHIVE_OLPATH: Terraform
+  :ARCHIVE_CATEGORY: TODO
+  :ARCHIVE_TODO: done
+  :END:

@@ -1,6 +1,6 @@
 #!/bin/bash
 
 papertrail_token="${papertrail_token}"
-consul_server="${consul_server}"
+puppet_master_addr="${puppet_master_addr}"
 
 ${logic}

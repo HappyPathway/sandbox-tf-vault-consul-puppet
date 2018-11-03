@@ -1,11 +1,5 @@
 PAPERTRAIL_TOKEN="${papertrail_token}"
-
-
-# require the following environment variables:
-#   - CONSUL_SERVER : IP address or hostname of a Consul server
-#   - PUPPET_ENTERPRISE_MASTER : IP address or hostname of a Puppet Enterprise master for download of Agent and classification.
-: ${CONSUL_DOWNLOAD_URI='https://releases.hashicorp.com/consul/1.3.0/consul_1.3.0_linux_amd64.zip'}
-: ${CONSUL_TEMPLATE_DOWNLOAD_URI='https://releases.hashicorp.com/consul-template/0.19.5/consul-template_0.19.5_linux_amd64.zip'}
+PUPPET_MASTER_ADDR="${puppet_master_addr}"
 
 
 function hello() {
@@ -32,67 +26,6 @@ function check_deps() {
 }
 
 
-function consul_agent_install() {
-   echo "Downloading and installing Consul agent..."
-   wget -q -c -O /tmp/consul.zip "${CONSUL_DOWNLOAD_URI}"
-   unzip -o /tmp/consul.zip -d /usr/local/bin/
-
-   mkdir -p /etc/consul.d /var/lib/consul
-
-   consul_bind_addr="$(facter ipaddress)"
-
-   cat > /etc/consul.d/consul.hcl <<CONSULCONFIG
-data_dir="/var/lib/consul"
-retry_join=["${consul_server}"]
-bind_addr="${consul_bind_addr}"
-CONSULCONFIG
-
-   cat /etc/consul.d/consul.hcl
-   consul validate /etc/consul.d
-   pkill -TERM consul && sleep 3 && pkill -9 consul
-   daemonize /usr/local/bin/consul agent -config-dir /etc/consul.d -syslog
-}
-
-
-function consul_template_install() {
-    echo "Downloading and installing consul-template..."
-    wget -q -c -O /tmp/consul-template.zip "${CONSUL_TEMPLATE_DOWNLOAD_URI}"
-    unzip -o /tmp/consul-template.zip -d /usr/local/bin/
-
-    mkdir -p /etc/consul-template.d
-    cat > /etc/consul-template.d/smokecheck.tpl <<CONSUL_TEMPLATE_CONF
-CONSUL_TEMPLATE_CONF
-
-    cat /etc/consul-template.d/smokecheck.tpl
-
-    pkill -TERM consul-template && sleep 3 && pkill -9 consul-template
-    consul-template -config /etc/consul-template.d -dry -once
-    daemonize /usr/local/bin/consul-template -config /etc/consul-template.d -syslog
-}
-
-
-function puppet_agent_install() {
-    echo "Downloading and installing Puppet Agent..."
-    curl -k "https://${PUPPET_ENTERPRISE_MASTER}:8140/packages/current/install.bash" | bash
-
-    sleep 10
-    while true; do
-	set +e
-	puppet agent -t
-	if [ "$?" -eq "0" ]; then
-	    set -e ; break
-	fi
-    done
-}
-
-
-function goodbye() {
-    msg="Consul Agent bootstrap finished."
-    logger $msg
-    echo $msg
-}
-
-
 function papertrail_install() {
     echo "Installing Papertrail agent..."
     wget -O /tmp/papertrail_setup.sh --header="X-Papertrail-Token: ${PAPERTRAIL_TOKEN}" https://papertrailapp.com/destinations/10987402/setup.sh
@@ -102,16 +35,35 @@ function papertrail_install() {
 }
 
 
-function dnsmasq_configure() {
-    tee /etc/NetworkManager/conf.d/10-dnsmasq.conf <<EOF
-[main]
-dns=dnsmasq
-EOF
+function puppet_agent_install() {
+    echo "Installing Puppet agent..."
+    while true; do
+	set +e
+	sleep 3
+	http --verify no "https://${PUPPET_MASTER_ADDR}:8140/packages/current/install.bash" > /dev/null 2>&1
+	if [ "$?" -eq "0" ]; then
+	    break
+	fi
+    done
+    set -e
 
-    tee /etc/NetworkManager/dnsmasq.d/10-consul <<EOF
-server=/consul/127.0.0.1#8600
-EOF
-    pkill -HUP NetworkManager
+    curl \
+	-k \
+	--retry 100 \
+	--max-time 10 \
+	--retry-delay 0 \
+	--retry-max-time 600 \
+	"https://${PUPPET_MASTER_ADDR}:8140/packages/current/install.bash" | bash
+
+    yum remove facter -y
+    pkill -HUP puppet
+}
+
+
+function goodbye() {
+    msg="Consul Agent bootstrap finished."
+    logger $msg
+    echo $msg
 }
 
 
@@ -123,11 +75,8 @@ function main() {
     hello
     check_deps
 
-    dnsmasq_configure
-    consul_agent_install
-    consul_template_install
+    set -x
     puppet_agent_install
-
     goodbye
     exit 0
 }
