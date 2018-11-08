@@ -12,6 +12,7 @@ function check_deps() {
     echo "Checking for required software..."
     command -v facter && command -v httpie && command -v curl
     if [ "0" -ne "$?" ]; then
+	apt-get update
 	apt-get install -y facter httpie curl dnsmasq bmon mosh
     fi
 }

@@ -66,7 +66,7 @@ data "template_file" "azure_custom_data" {
 
   vars {
     papertrail_token = "${var.papertrail_token}"
-    puppet_master_addr = "{module.infra_aws.puppet-master.public_dns}"
+    puppet_master_addr = "${var.puppet_master_addr}"
     logic            = "${file("${path.module}/../../scripts/puppet_agent_bootstrap.sh")}"
   }
 }

@@ -47,7 +47,7 @@ function pe_install() {
     hocon -f /tmp/pe/conf.d/pe.conf set puppet_enterprise\"::\"profile\"::\"agent\"::\"pcp_broker_list "[ \"https://${public_hostname}:8140\" ]"
     hocon -f /tmp/pe/conf.d/pe.conf set puppet_enterprise\"::\"profile\"::\"master\"::\"r10k_remote "\"9https://gitlab.com/nrvale0/sandbox-tf-vault-consul-puppet-control-repo\""
     hocon -f /tmp/pe/conf.d/pe.conf set puppet_enterprise\"::\"profile\"::\"master\"::\"code_manager_auto_configure true
-    hocon -f /tmp/pe/conf.d/pe.conf set agent_platforms "[ \"el-7-x86_64\", \"ubuntu-14.04-amd64\" ]"
+    hocon -f /tmp/pe/conf.d/pe.conf set agent_platforms "[ \"el-7-x86_64\", \"ubuntu-14.04-amd64\", \"ubuntu-16.04-amd64\" ]"
 
     /tmp/pe/puppet-enterprise-installer -c /tmp/pe/conf.d/pe.conf -y
 
