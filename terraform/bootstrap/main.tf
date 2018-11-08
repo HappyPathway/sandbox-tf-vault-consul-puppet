@@ -132,3 +132,10 @@ resource "tfe_variable" "VSPHERE_SERVER" {
   workspace_id = "${tfe_workspace.workspace.id}"
   sensitive = true
 }
+
+resource "tfe_variable" "TFE_PARALLELISM" {
+  key = "TFE_PARALLELISM"
+  value = "${var.workspace_TFE_PARALLELISM}"
+  category = "env"
+  workspace_id = "${tfe_workspace.workspace.id}"
+}

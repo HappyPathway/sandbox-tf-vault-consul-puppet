@@ -62,12 +62,12 @@ resource "azurerm_storage_account" "app_vm_boot_diagnostics" {
 }
 
 data "template_file" "azure_custom_data" {
-  template = "${file("${path.module}/../../templates/consul_client_bootstrap.sh.tpl")}"
+  template = "${file("${path.module}/../../templates/puppet_agent_bootstrap.sh.tpl")}"
 
   vars {
     papertrail_token = "${var.papertrail_token}"
     puppet_master_addr = "{module.infra_aws.puppet-master.public_dns}"
-    logic            = "${file("${path.module}/../../scripts/consul_client_bootstrap.sh")}"
+    logic            = "${file("${path.module}/../../scripts/puppet_agent_bootstrap.sh")}"
   }
 }
 

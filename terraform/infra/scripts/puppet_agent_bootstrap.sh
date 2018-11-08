@@ -1,27 +1,18 @@
 PAPERTRAIL_TOKEN="${papertrail_token}"
 PUPPET_MASTER_ADDR="${puppet_master_addr}"
 
-
 function hello() {
-    msg='Hello from the Consul client bootstrap script!'
+    msg='Hello from the Puppet Agent bootstrap script!'
     logger $msg
     echo $msg
-
-    set -u
-
-    echo "Consul Servers specified via CONSUL_SERVER environment variable: ${CONSUL_SERVER}"
-    echo "Puppet Enterprise Master specified via PUPPET_ENTERPRISE_MASTER environment variable: ${PUPPET_ENTERPRISE_MASTER}"
 }
 
 
 function check_deps() {
     echo "Checking for required software..."
-    command -v zip && command -v daemonize && command -v httpie && command -v curl
+    command -v facter && command -v httpie && command -v curl
     if [ "0" -ne "$?" ]; then
-	export DEBIAN_FRONTEND=noninteractive
-	export DEBCONF_NONINTERACTIVE_SEEN=true
-	apt-get update
-	apt-get install -y zip daemonize httpie curl network-manager dnsmasq-base dnsmasq-utils bmon
+	apt-get install -y facter httpie curl dnsmasq bmon mosh
     fi
 }
 
@@ -37,6 +28,7 @@ function papertrail_install() {
 
 function puppet_agent_install() {
     echo "Installing Puppet agent..."
+
     while true; do
 	set +e
 	sleep 3
@@ -59,15 +51,14 @@ function puppet_agent_install() {
     pkill -HUP puppet
 }
 
-
 function goodbye() {
-    msg="Consul Agent bootstrap finished."
+    msg='Puppet Agent bootstrap script finished.'
     logger $msg
     echo $msg
 }
 
 
-function main() {
+main() {
     set -eu
     papertrail_install
 

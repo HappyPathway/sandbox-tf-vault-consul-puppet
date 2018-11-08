@@ -26,3 +26,5 @@ variable "workspace_VSPHERE_ALLOW_UNVERIFIED_SSL" { default = true }
 variable "workspace_VSPHERE_USER" {}
 variable "workspace_VSPHERE_PASSWORD" {}
 variable "workspace_VSPHERE_SERVER" {}
+
+variable "workspace_TFE_PARALLELISM" { default = 10 }
