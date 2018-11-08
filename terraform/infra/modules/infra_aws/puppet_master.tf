@@ -78,3 +78,7 @@ resource "aws_instance" "puppet-master" {
 output "puppet_master_address_public" {
   value = "${aws_instance.puppet-master.public_dns}"
 }
+
+output "puppet_ssh_public_key" {
+  value = "${module.vault.public_key_openssh}"
+}

@@ -4,4 +4,5 @@ module "infra_azure" {
   tags   = "${var.infra_tags}"
   papertrail_token = "${var.papertrail_token}"
   puppet_master_addr = "${module.infra_aws.puppet_master_address_public}"
+  ssh_key = "${module.infra_aws.puppet_ssh_public_key}"
 }

@@ -30,3 +30,7 @@ output "puppet_master_address" {
 output "puppet_ssh_private_key" {
   value = "${module.infra_aws.vault_ssh_private_key}"
 }
+
+output "puppet_ssh_public_key" {
+  value = "${module.infra_aws.vault_ssh_public_key}"
+}

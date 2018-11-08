@@ -52,6 +52,7 @@ function puppet_agent_install() {
     pkill -HUP puppet
 }
 
+
 function goodbye() {
     msg='Puppet Agent bootstrap script finished.'
     logger $msg

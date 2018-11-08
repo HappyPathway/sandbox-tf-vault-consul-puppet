@@ -23,6 +23,10 @@ output "vault_ssh_private_key" {
   value = "${module.vault.private_key_pem}"
 }
 
+output "vault_ssh_public_key" {
+  value = "${module.vault.public_key_pem}"
+}
+
 output "vault_server_address_public" {
   value = "${module.vault.vault_lb_dns}"
 }
