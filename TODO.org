@@ -5,18 +5,17 @@
 
 * maybe Packer builds in CircleCI
 * todo Terraform
-** next have the non-AWS nodes register with the Puppet Master
-   DEADLINE: <2018-11-02 Fri> SCHEDULED: <2018-11-02 Fri>
 ** maybe Have the Consul agents get the Consul leader address from the AWS LB
 ** maybe create the build tools container
 ** maybe trigger TFE runs from GitlabCI
 ** todo AWS Puppet infra
-*** vSphere [0/3]
+*** next configure Puppet Code Manager during bootstrap
+    SCHEDULED: <2018-11-09 Fri>
+*** todo add code to have the agents register with Consul and Vault
+    SCHEDULED: <2018-11-09 Fri>
+*** vSphere [0/2]
 **** todo get node a public IP
-**** todo papertrail for this node
-**** todo Puppet Agent for this node
-*** todo consul_client_bootstrap script registers with the Puppet master
-    SCHEDULED: <2018-10-12 Fri>
+**** todo provisioning code
 *** todo agent(s) with Vault integration
     blocked on control repo
 ** todo Identify a good Connect demo

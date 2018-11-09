@@ -21,6 +21,11 @@ resource "google_compute_instance" "gcp_instance" {
 
   metadata_startup_script = "${data.template_file.google_startup_script.rendered}"
 
+  metadata {
+    userName = "ubuntu"
+    sshKeys = "${var.ssh_key}"
+  }
+
   boot_disk {
     initialize_params {
       image = "${var.image}"

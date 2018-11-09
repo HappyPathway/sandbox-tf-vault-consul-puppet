@@ -104,3 +104,23 @@ Archived entries from file /home/nrvale0/workspace/gitlab/nrvale0/sandbox-tf-vau
   :ARCHIVE_CATEGORY: TODO
   :ARCHIVE_TODO: done
   :END:
+
+* done have the non-AWS nodes register with the Puppet Master
+  DEADLINE: <2018-11-02 Fri> SCHEDULED: <2018-11-02 Fri>
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2018-11-09 Fri 12:55
+  :ARCHIVE_FILE: ~/workspace/gitlab/nrvale0/sandbox-tf-vault-consul-puppet/TODO.org
+  :ARCHIVE_OLPATH: Terraform
+  :ARCHIVE_CATEGORY: TODO
+  :ARCHIVE_TODO: done
+  :END:
+
+* done consul_client_bootstrap script registers with the Puppet master
+  SCHEDULED: <2018-10-12 Fri>
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2018-11-09 Fri 12:56
+  :ARCHIVE_FILE: ~/workspace/gitlab/nrvale0/sandbox-tf-vault-consul-puppet/TODO.org
+  :ARCHIVE_OLPATH: Terraform/AWS Puppet infra
+  :ARCHIVE_CATEGORY: TODO
+  :ARCHIVE_TODO: done
+  :END:

@@ -14,16 +14,15 @@ function hello() {
 
 function check_deps() {
     echo "Checking for required software..."
-    command -v hocon && command -v facter && command -v httpie && command -v curl
+    command -v hocon && command -v facter && command -v httpie && command -v curl && command -v jq
 
     if [ "0" -ne "$?" ]; then
-
 	# Why are the AWS mirrors so freakin' slow?
 	cp /etc/apt/sources.list /tmp/
 	echo 'deb mirror://mirrors.ubuntu.com/mirrors.txt bionic main restricted universe multiverse' > /etc/apt/sources.list
 	cat /tmp/sources.list >> /etc/apt/sources.list
 	apt-get update
-	apt-get install -y ruby-hocon facter daemonize httpie curl dnsmasq-base dnsmasq-utils bmon mosh
+	apt-get install -y ruby-hocon facter daemonize httpie curl dnsmasq-base dnsmasq-utils bmon mosh jq
     fi
 }
 
@@ -45,13 +44,11 @@ function pe_install() {
     hocon -f /tmp/pe/conf.d/pe.conf set pe_repo\"::\"master "${public_hostname}"
     hocon -f /tmp/pe/conf.d/pe.conf set puppet_enterprise\"::\"profile\"::\"agent\"::\"master_uris "[ \"https://${public_hostname}:8140\" ]"
     hocon -f /tmp/pe/conf.d/pe.conf set puppet_enterprise\"::\"profile\"::\"agent\"::\"pcp_broker_list "[ \"https://${public_hostname}:8140\" ]"
-    hocon -f /tmp/pe/conf.d/pe.conf set puppet_enterprise\"::\"profile\"::\"master\"::\"r10k_remote "\"9https://gitlab.com/nrvale0/sandbox-tf-vault-consul-puppet-control-repo\""
+    hocon -f /tmp/pe/conf.d/pe.conf set puppet_enterprise\"::\"profile\"::\"master\"::\"r10k_remote "\"https://gitlab.com/nrvale0/sandbox-tf-vault-consul-puppet-control-repo\""
     hocon -f /tmp/pe/conf.d/pe.conf set puppet_enterprise\"::\"profile\"::\"master\"::\"code_manager_auto_configure true
     hocon -f /tmp/pe/conf.d/pe.conf set agent_platforms "[ \"el-7-x86_64\", \"ubuntu-14.04-amd64\", \"ubuntu-16.04-amd64\" ]"
 
     /tmp/pe/puppet-enterprise-installer -c /tmp/pe/conf.d/pe.conf -y
-
-    apt-get remove facter -y
 
     sleep 10
     while true; do
@@ -61,6 +58,35 @@ function pe_install() {
 	    set -e; break
 	fi
     done
+}
+
+
+function pe_configure() {
+    # module for adding Code Manager user
+    puppet module install pltraining-rbac
+
+    # setup a user to do automagic code pulls via Code Manager
+    cat <<EOF > /tmp/pe_setup.pp
+rbac_user { 'codedeployer':
+  ensure       => 'present',
+  name         => 'codedeployer',
+  email        => 'codedeployer@example.notavlidtld',
+  display_name => 'Code Deployer',
+  password     => 'youshouldchangethisasap',
+  roles  => [ 'Code Deployers' ]
+}
+EOF
+    puppet apply /tmp/pe_setup.pp
+
+    # get the token
+    mkdir ~root/.puppetlabs
+    chmod 0750 ~root/.puppetlabs
+    curl -k -X POST -H 'Content-Type: application/json' \
+	 -d '{"login": "codedeployer", "password": "youshouldchangethisasap", "lifetime": "0"}' \
+	 https://`facter fqdn`:4433/rbac-api/v1/auth/token | jq -r .token > ~root/.puppetlabs/token
+
+    # deploy the code from the control-repo configured during text-mode install
+    /opt/puppetlabs/bin/puppet-code deploy --all
 }
 
 
@@ -90,6 +116,7 @@ main() {
 
     set -x
     pe_install
+    pe_configure
     goodbye
     exit 0
 }
