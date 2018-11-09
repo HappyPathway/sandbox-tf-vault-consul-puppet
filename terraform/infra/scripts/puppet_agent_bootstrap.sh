@@ -48,8 +48,7 @@ function puppet_agent_install() {
 	--retry-max-time 600 \
 	"https://${PUPPET_MASTER_ADDR}:8140/packages/current/install.bash" | bash
 
-    yum remove facter -y
-    pkill -HUP puppet
+    (set +e && pkill -HUP puppet)
 }
 
 
