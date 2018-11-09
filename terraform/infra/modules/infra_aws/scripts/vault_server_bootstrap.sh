@@ -48,7 +48,13 @@ function puppet_agent_install() {
 	--retry-max-time 600 \
 	"https://${PUPPET_MASTER_ADDR}:8140/packages/current/install.bash" | bash
 
-    (set +e && pkill -HUP puppet)
+    while true; do
+	echo "Puppet Agent waiting for certificate..."
+	puppet agent -t --waitforcert 60
+	if [ "$?" -eq "0" ]; then
+	    break
+	fi
+    done
 }
 
 
