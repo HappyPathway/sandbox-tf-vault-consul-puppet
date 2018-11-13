@@ -30,6 +30,7 @@ function papertrail_install() {
 function puppet_agent_install() {
     echo "Installing Puppet agent..."
 
+    echo "Polling Puppet master for available pluginsync bundle..."
     while true; do
 	set +e
 	sleep 3
@@ -40,17 +41,23 @@ function puppet_agent_install() {
     done
     set -e
 
-    curl \
-	-k \
-	--retry 100 \
-	--max-time 10 \
-	--retry-delay 0 \
-	--retry-max-time 600 \
-	"https://${PUPPET_MASTER_ADDR}:8140/packages/current/install.bash" | bash
-
+    echo "Polling Puppet master for available Agent install..."
     while true; do
-	echo "Puppet Agent waiting for certificate..."
-	puppet agent -t --waitforcert 60
+	curl \
+	    -k \
+	    --retry 100 \
+	    --max-time 10 \
+	    --retry-delay 0 \
+	    --retry-max-time 600 \
+	    "https://${PUPPET_MASTER_ADDR}:8140/packages/current/install.bash" | bash
+	if [ "$?" -eq "0" ]; then
+	    break
+	fi
+    done
+
+    echo "Running Puppet Agent until we get a clean run with no changes..."
+    while true; do
+	puppet agent -t
 	if [ "$?" -eq "0" ]; then
 	    break
 	fi

@@ -1,5 +1,5 @@
 data "template_file" "consul_server_bootstrap_sh" {
-  template = "${file("${path.module}/templates/consul_server_bootstrap.sh.tpl")}"
+  template = "${var.custom_user_data}"
 
   vars {
     papertrail_token   = "${var.papertrail_token}"

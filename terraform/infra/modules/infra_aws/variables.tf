@@ -5,12 +5,7 @@ variable "tags" {
   default = {}
 }
 
-variable "consul_is_public" {
-  default = true
-}
-
-variable "vault_is_public" {
-  default = true
-}
-
+variable "consul_is_public" { default = true }
+variable "vault_is_public" { default = true }
 variable "papertrail_token" {}
+variable "custom_user_data" {}

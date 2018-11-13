@@ -5,6 +5,7 @@ module "infra_aws" {
   tags   = "${var.infra_tags}"
 
   papertrail_token = "${var.papertrail_token}"
+  custom_user_data = "${file("${path.module}/scripts/puppet_agent_bootstrap.sh")}"
 }
 
 output "vault_ssh_private_key" {
