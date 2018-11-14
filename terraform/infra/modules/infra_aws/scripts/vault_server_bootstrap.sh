@@ -63,8 +63,8 @@ function puppet_agent_install() {
 	"https://${PUPPET_MASTER_ADDR}:8140/packages/current/install.bash" | bash
 
     while true; do
-	echo "Puppet Agent waiting for certificate..."
-	puppet agent -t --waitforcert 60
+	echo "Running Puppet Agent until we converge..."
+	puppet agent -t
 	if [ "$?" -eq "0" ]; then
 	    break
 	fi

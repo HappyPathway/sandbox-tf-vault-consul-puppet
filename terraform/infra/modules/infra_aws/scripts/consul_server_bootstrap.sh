@@ -55,8 +55,8 @@ function puppet_agent_install() {
     done
 
     while true; do
-	echo "Puppet Agent waiting for certificate..."
-	puppet agent -t --waitforcert 60
+	echo "Running Puppet Agent until we converge..."
+	puppet agent -t
 	if [ "$?" -eq "0" ]; then
 	    break
 	fi
