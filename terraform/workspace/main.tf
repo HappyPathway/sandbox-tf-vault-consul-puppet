@@ -139,3 +139,10 @@ resource "tfe_variable" "TFE_PARALLELISM" {
   category = "env"
   workspace_id = "${tfe_workspace.workspace.id}"
 }
+
+resource "tfe_variable" "puppet_master_public_dns" {
+  key = "puppet_master_public_dns"
+  value = "${var.workspace_puppet_master_public_dns}"
+  category = "terraform"
+  workspace_id = "${tfe_workspace.workspace.id}"
+}

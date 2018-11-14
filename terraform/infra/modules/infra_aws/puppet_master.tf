@@ -75,6 +75,19 @@ resource "aws_instance" "puppet-master" {
   vpc_security_group_ids      = ["${aws_security_group.puppet-master.id}"]
 }
 
+data "aws_route53_zone" "hashidemos_io" {
+  name = "hashidemos.io"
+  private_zone = false
+}
+
+resource "aws_route53_record" "vault-puppet" {
+  zone_id = "${data.aws_route53_zone.hashidemos_io.id}"
+  name = "${var.prefix}.hashidemos.io"
+  type = "CNAME"
+  ttl = 5
+  records = [ "${aws_instance.puppet-master.public_dns}" ]
+}
+
 output "puppet_master_address_public" {
   value = "${aws_instance.puppet-master.public_dns}"
 }

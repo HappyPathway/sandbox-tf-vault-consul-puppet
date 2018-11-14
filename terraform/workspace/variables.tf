@@ -9,6 +9,7 @@ variable "workspace_branch" { default = "master" }
 variable "workspace_oauth_token" {}
 
 variable "workspace_papertrail_token" {}
+variable "workspace_puppet_master_public_dns" { default = "vault-puppet-demo.hashidemos.io" }
 
 variable "workspace_AWS_SECRET_KEY" {}
 variable "workspace_AWS_ACCESS_KEY_ID" {}
