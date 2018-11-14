@@ -1,4 +1,3 @@
-PAPERTRAIL_TOKEN="${papertrail_token}"
 PUPPET_MASTER_ADDR="${puppet_master_addr}"
 
 function hello() {
@@ -15,15 +14,6 @@ function check_deps() {
 	apt-get update
 	apt-get install -y facter httpie curl dnsmasq bmon mosh
     fi
-}
-
-
-function papertrail_install() {
-    echo "Installing Papertrail agent..."
-    wget -O /tmp/papertrail_setup.sh --header="X-Papertrail-Token: ${PAPERTRAIL_TOKEN}" https://papertrailapp.com/destinations/10987402/setup.sh
-    chmod +x /tmp/papertrail_setup.sh
-    /tmp/papertrail_setup.sh -q
-    rm /tmp/papertrail_setup.sh
 }
 
 
@@ -73,9 +63,6 @@ function goodbye() {
 
 
 main() {
-    set -eu
-    papertrail_install
-
     set -eux
     hello
     check_deps

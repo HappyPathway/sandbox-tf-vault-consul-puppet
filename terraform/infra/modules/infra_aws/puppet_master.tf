@@ -43,7 +43,7 @@ data "template_file" "pemaster_bootstrap_sh" {
 
   vars {
     papertrail_token = "${var.papertrail_token}"
-    consul_server    = "${module.consul.consul_lb_dns}"
+    puppet_master_public_dns = "${var.prefix}.hashidemos.io"
     cluster_name     = "${var.prefix}"
     logic            = "${file("${path.module}/scripts/pemaster_bootstrap.sh")}"
   }

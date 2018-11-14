@@ -1,4 +1,5 @@
 PAPERTRAIL_TOKEN="${papertrail_token}"
+PUPPET_MASTER_PUBLIC_DNS="${puppet_master_public_dns}"
 CLUSTER_NAME="${cluster_name}"
 
 : ${PE_DOWNLOAD_URI='https://pm.puppet.com/cgi-bin/download.cgi?arch=amd64&dist=ubuntu&rel=18.04&ver=latest'}
@@ -40,7 +41,7 @@ function pe_install() {
     # There are a number of settings which have to be adjust to ensure proper operation though
     # an AWS loadbalancer.
     hocon -f /tmp/pe/conf.d/pe.conf set pe_install\"::\"master_pool_address "${public_hostname}"
-    hocon -f /tmp/pe/conf.d/pe.conf set pe_install\"::\"puppet_master_dnsaltnames "[ \"${public_hostname}\", \"puppet.node.dc1.consul\" ]"
+    hocon -f /tmp/pe/conf.d/pe.conf set pe_install\"::\"puppet_master_dnsaltnames "[ \"${public_hostname}\", \"${PUPPET_MASTER_PUBLIC_DNS}\", \"puppet.node.dc1.consul\" ]"
     hocon -f /tmp/pe/conf.d/pe.conf set pe_repo\"::\"master "${public_hostname}"
     hocon -f /tmp/pe/conf.d/pe.conf set puppet_enterprise\"::\"profile\"::\"agent\"::\"master_uris "[ \"https://${public_hostname}:8140\" ]"
     hocon -f /tmp/pe/conf.d/pe.conf set puppet_enterprise\"::\"profile\"::\"agent\"::\"pcp_broker_list "[ \"https://${public_hostname}:8140\" ]"
