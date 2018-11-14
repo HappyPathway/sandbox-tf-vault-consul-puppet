@@ -66,7 +66,7 @@ data "template_cloudinit_config" "pemaster_cloudinit" {
 resource "aws_instance" "puppet-master" {
   ami           = "${data.aws_ami.ubuntu.id}"
   instance_type = "m1.large"
-  tags          = "${merge(var.tags, map("Name", "${var.prefix}-puppet-master"))}"
+  tags          = "${merge(var.tags, map("Name", "puppet-master-${var.prefix}"))}"
   subnet_id     = "${element(module.vault.subnet_public_ids, 0)}"
 
   user_data                   = "${data.template_cloudinit_config.pemaster_cloudinit.rendered}"

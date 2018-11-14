@@ -10,7 +10,7 @@ data "template_file" "consul_server_bootstrap_sh" {
 
 module "consul" {
   source           = "git::https://github.com/nrvale0/consul-guides//operations/provision-consul/dev/terraform-aws?ref=provision-dev-custom-user-data"
-  name             = "${var.prefix}"
+  name             = "consul-server-${var.prefix}"
   consul_servers   = 1
   consul_tags      = "${var.tags}"
   network_tags     = "${var.tags}"

@@ -10,7 +10,7 @@ data "template_file" "vault_server_bootstrap_sh" {
 
 module "vault" {
   source          = "git::https://github.com/nrvale0/vault-guides//operations/provision-vault/dev/terraform-aws?ref=provision-dev-custom-user-data"
-  name            = "${var.prefix}"
+  name            = "vault-server-${var.prefix}"
   vault_servers   = 1
   vault_tags      = "${var.tags}"
   network_tags    = "${var.tags}"
