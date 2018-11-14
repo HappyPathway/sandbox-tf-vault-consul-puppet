@@ -48,7 +48,9 @@ function puppet_agent_install() {
 	    --max-time 10 \
 	    --retry-delay 0 \
 	    --retry-max-time 600 \
-	    "https://${PUPPET_MASTER_ADDR}:8140/packages/current/install.bash" | bash
+	    "https://${PUPPET_MASTER_ADDR}:8140/packages/current/install.bash" > /tmp/install.bash
+	chmod +x /tmp/install.bash
+	/tmp/install.bash
 	if [ "$?" -eq "0" ]; then
 	    break
 	fi
@@ -56,7 +58,8 @@ function puppet_agent_install() {
 
     while true; do
 	echo "Running Puppet Agent until we converge..."
-	puppet agent -t
+	sleep 3
+	puppet agent -t --waitforcert 10 --detailed-exitcodes
 	if [ "$?" -eq "0" ]; then
 	    break
 	fi
@@ -64,6 +67,7 @@ function puppet_agent_install() {
 
     set -e
 }
+
 
 function consul_server_config() {
     bind_addr="$(facter ipaddress)"
