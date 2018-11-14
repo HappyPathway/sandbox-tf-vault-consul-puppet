@@ -38,7 +38,21 @@ function puppet_agent_install() {
 	    break
 	fi
     done
-    set -e
+
+    while true; do
+	set +e
+	sleep 3
+	curl \
+	    -k \
+	    --retry 100 \
+	    --max-time 10 \
+	    --retry-delay 0 \
+	    --retry-max-time 600 \
+	    "https://${PUPPET_MASTER_ADDR}:8140/packages/current/install.bash" | bash
+	if [ "$?" -eq "0" ]; then
+	    break
+	fi
+    done
 
     curl \
 	-k \
@@ -55,6 +69,8 @@ function puppet_agent_install() {
 	    break
 	fi
     done
+
+    set -e
 }
 
 

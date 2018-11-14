@@ -1,5 +1,5 @@
 data "template_file" "vault_server_bootstrap_sh" {
-  template = "${var.custom_user_data}"
+  template = "${file("${path.module}/templates/vault_server_bootstrap.sh.tpl")}"
 
   vars {
     papertrail_token   = "${var.papertrail_token}"

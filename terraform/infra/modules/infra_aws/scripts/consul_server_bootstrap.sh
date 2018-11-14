@@ -38,15 +38,21 @@ function puppet_agent_install() {
 	    break
 	fi
     done
-    set -e
 
-    curl \
-	-k \
-	--retry 100 \
-	--max-time 10 \
-	--retry-delay 0 \
-	--retry-max-time 600 \
-	"https://${PUPPET_MASTER_ADDR}:8140/packages/current/install.bash" | bash
+    while true; do
+	set +e
+	sleep 3
+	curl \
+	    -k \
+	    --retry 100 \
+	    --max-time 10 \
+	    --retry-delay 0 \
+	    --retry-max-time 600 \
+	    "https://${PUPPET_MASTER_ADDR}:8140/packages/current/install.bash" | bash
+	if [ "$?" -eq "0" ]; then
+	    break
+	fi
+    done
 
     while true; do
 	echo "Puppet Agent waiting for certificate..."
@@ -55,6 +61,8 @@ function puppet_agent_install() {
 	    break
 	fi
     done
+
+    set -e
 }
 
 function consul_server_config() {

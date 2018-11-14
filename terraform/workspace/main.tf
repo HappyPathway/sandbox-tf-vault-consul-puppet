@@ -8,6 +8,7 @@ resource "tfe_workspace" "workspace" {
   organization = "${var.tfe_org_name}"
   auto_apply = "${var.workspace_auto_apply}"
   working_directory = "terraform/infra"
+  terraform_version = "${var.workspace_terraform_version}"
 
   vcs_repo {
     identifier = "${var.workspace_vcs_repo}"

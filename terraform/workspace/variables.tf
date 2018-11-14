@@ -7,6 +7,7 @@ variable "workspace_auto_apply" { default = true }
 variable "workspace_vcs_repo" { default = "nrvale0/sandbox-tf-vault-consul-puppet" }
 variable "workspace_branch" { default = "master" }
 variable "workspace_oauth_token" {}
+variable "workspace_terraform_version" { default = "0.11.7" }
 
 variable "workspace_papertrail_token" {}
 variable "workspace_puppet_master_public_dns" { default = "vault-puppet-demo.hashidemos.io" }
