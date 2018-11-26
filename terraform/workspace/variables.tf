@@ -1,10 +1,10 @@
 variable "tfe_hostname" { default = "ptfe.this-demo.rocks" }
 variable "tfe_api_token" {}
-variable "tfe_org_name" { default = "SE_nathan_valentine_demos" }
+variable "tfe_org_name" { default = "DavesSEDemos" }
 
 variable "workspace_name" { default = "vault-puppet-demo" }
 variable "workspace_auto_apply" { default = true }
-variable "workspace_vcs_repo" { default = "nrvale0/sandbox-tf-vault-consul-puppet" }
+variable "workspace_vcs_repo" { default = "HappyPathway/sandbox-tf-vault-consul-puppet" }
 variable "workspace_branch" { default = "master" }
 variable "workspace_oauth_token" {}
 variable "workspace_terraform_version" { default = "0.11.7" }

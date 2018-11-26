@@ -31,6 +31,7 @@ function puppet_agent_install() {
     echo "Installing Puppet agent..."
 
     while true; do
+	echo "Checking for availability of Puppet pluginsync bundle..."
 	set +e
 	sleep 3
 	http --check-status --verify no "https://${PUPPET_MASTER_ADDR}:8140/packages/bulk_pluginsync.tar.gz" > /dev/null 2>&1
@@ -40,24 +41,24 @@ function puppet_agent_install() {
     done
 
     while true; do
+	echo "Checking Puppet server for availablity of Puppet Agent install script..."
 	set +e
 	sleep 3
-	curl \
-	    -k \
-	    --retry 100 \
-	    --max-time 10 \
-	    --retry-delay 0 \
-	    --retry-max-time 600 \
-	    "https://${PUPPET_MASTER_ADDR}:8140/packages/current/install.bash" > /tmp/install.bash
-	chmod +x /tmp/install.bash
-	/tmp/install.bash
+
+	http --check-status --verify no "https://${PUPPET_MASTER_ADDR}:8140/packages/current/install.bash" > /tmp/install.bash
 	if [ "$?" -eq "0" ]; then
 	    break
 	fi
     done
 
+    set -e
+    echo "Exeucting the Puppet Agent installer..."
+    chmod +x /tmp/install.bash
+    /tmp/install.bash
+
     while true; do
 	echo "Running Puppet Agent until we converge..."
+	set +e
 	sleep 3
 	puppet agent -t --waitforcert 10 --detailed-exitcodes
 	if [ "$?" -eq "0" ]; then

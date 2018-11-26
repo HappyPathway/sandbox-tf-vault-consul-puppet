@@ -42,10 +42,10 @@ data "template_file" "pemaster_bootstrap_sh" {
   template = "${file("${path.module}/templates/pemaster_bootstrap.sh.tpl")}"
 
   vars {
-    papertrail_token = "${var.papertrail_token}"
+    papertrail_token         = "${var.papertrail_token}"
     puppet_master_public_dns = "${var.prefix}.hashidemos.io"
-    cluster_name     = "${var.prefix}"
-    logic            = "${file("${path.module}/scripts/pemaster_bootstrap.sh")}"
+    cluster_name             = "${var.prefix}"
+    logic                    = "${file("${path.module}/scripts/pemaster_bootstrap.sh")}"
   }
 }
 
@@ -76,16 +76,16 @@ resource "aws_instance" "puppet-master" {
 }
 
 data "aws_route53_zone" "hashidemos_io" {
-  name = "hashidemos.io"
+  name         = "hashidemos.io"
   private_zone = false
 }
 
 resource "aws_route53_record" "vault-puppet" {
   zone_id = "${data.aws_route53_zone.hashidemos_io.id}"
-  name = "${var.prefix}.hashidemos.io"
-  type = "CNAME"
-  ttl = 5
-  records = [ "${aws_instance.puppet-master.public_dns}" ]
+  name    = "${var.prefix}.hashidemos.io"
+  type    = "CNAME"
+  ttl     = 5
+  records = ["${aws_instance.puppet-master.public_dns}"]
 }
 
 output "puppet_master_address_public" {

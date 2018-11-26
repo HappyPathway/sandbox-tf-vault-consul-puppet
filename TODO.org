@@ -9,14 +9,10 @@
 ** maybe create the build tools container
 ** maybe trigger TFE runs from GitlabCI
 ** todo AWS Puppet infra
-*** next configure Puppet Code Manager during bootstrap
-    SCHEDULED: <2018-11-09 Fri>
 *** todo add code to have the agents register with Consul and Vault
     SCHEDULED: <2018-11-09 Fri>
 *** vSphere [0/2]
 **** todo get node a public IP
 **** todo provisioning code
-*** todo agent(s) with Vault integration
-    blocked on control repo
 ** todo Identify a good Connect demo
    - Todd's e-commerce with the components spread out amongst the clouds and wired back together with Connect?
