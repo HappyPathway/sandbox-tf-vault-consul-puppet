@@ -1,5 +1,5 @@
 variable "infra_prefix" {
-  default = "vault-puppet-demo"
+  default = "vault-puppet-demo-darnold"
 }
 
 variable "infra_tags" {
