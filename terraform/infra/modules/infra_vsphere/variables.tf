@@ -1,5 +1,5 @@
 variable "disk_size" {
-  default = 1
+  default = 16
 }
 
 variable "vm_name" {
